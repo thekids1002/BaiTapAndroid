@@ -46,18 +46,24 @@ public class FileModelAdapter extends ArrayAdapter<FileModel> {
         imageView.setImageBitmap(BitmapFactory.decodeFile( fileCustom.getFilepath()));
         //System.out.println(fileCustom.getFilepath());
         textView.setText(fileCustom.getFilename());
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(parent.getContext(), MainActivity2.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("filename", fileCustom.getFilename());
-                bundle.putString("filepath",  fileCustom.getFilepath());
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
-        textView.setOnClickListener(new View.OnClickListener() {
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(parent.getContext(), MainActivity2.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("filename", fileCustom.getFilename());
+//                bundle.putString("filepath",  fileCustom.getFilepath());
+//                intent.putExtras(bundle);
+//                context.startActivity(intent);
+//            }
+//        });
+//        textView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
+        convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(parent.getContext(), MainActivity2.class);
