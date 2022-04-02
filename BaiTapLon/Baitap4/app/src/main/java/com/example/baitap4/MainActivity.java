@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         addControl();
         getFileInDir();
         addEvent();
-        registerForContextMenu(lvFile);
+
     }
 
     @Override
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         getFileInDir();
         fileModelAdapter = new FileModelAdapter(MainActivity.this, R.layout.listview_custom, fileModel);
         lvFile.setAdapter(fileModelAdapter);
+        registerForContextMenu(lvFile);
     }
 
     private void addEvent() {
@@ -145,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
                 showImage(index);
                 return true;
             case R.id.menu_ct_delete:
-                deleteFile(fileModel.get(index).getFilepath());
+                if(deleteFile(fileModel.get(index).getFilepath())){
+                    Toast.makeText(MainActivity.this, "File Deleted", Toast.LENGTH_SHORT).show();
+                }
                 getFileInDir();
                 fileModelAdapter.notifyDataSetChanged();
                 return true;
@@ -186,11 +190,16 @@ public class MainActivity extends AppCompatActivity {
     public void getFileInDir() { // đọc các file trong thư mục rồi đưa lên danh sách
         files = new File[]{};
         File directory = new File(dirPath);
-        files = directory.listFiles();
-        fileModel.clear();
-        for (int i = 0; i < files.length; i++) {
-            fileModel.add(new FileModel(files[i].getName(), files[i].getAbsolutePath()));
+        if(directory.exists()){
+            files = directory.listFiles();
+            fileModel.clear();
+            if(files.length > 0){
+                for (int i = 0; i < files.length; i++) {
+                    fileModel.add(new FileModel(files[i].getName(), files[i].getAbsolutePath()));
+                }
+            }
         }
+
     }
 
     @Override
