@@ -1,4 +1,4 @@
-package adapter;
+package Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -41,35 +41,18 @@ public class FileModelAdapter extends ArrayAdapter<FileModel> {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.listview_custom, parent, false);
         }
         ImageView imageView = convertView.findViewById(R.id.imageview);
-        TextView textView = convertView.findViewById(R.id.textView);
-        FileModel fileCustom = this.objects.get(position);
-        imageView.setImageBitmap(BitmapFactory.decodeFile( fileCustom.getFilepath()));
-        //System.out.println(fileCustom.getFilepath());
-        textView.setText(fileCustom.getFilename());
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(parent.getContext(), MainActivity2.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("filename", fileCustom.getFilename());
-//                bundle.putString("filepath",  fileCustom.getFilepath());
-//                intent.putExtras(bundle);
-//                context.startActivity(intent);
-//            }
-//        });
-//        textView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
+        TextView fileName = convertView.findViewById(R.id.textView);
+
+        FileModel fileModel = this.objects.get(position);
+        imageView.setImageBitmap(BitmapFactory.decodeFile( fileModel.getFilepath()));
+        fileName.setText(fileModel.getFilename());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(parent.getContext(), MainActivity2.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("filename", fileCustom.getFilename());
-                bundle.putString("filepath",  fileCustom.getFilepath());
+                bundle.putString("filename", fileModel.getFilename());
+                bundle.putString("filepath",  fileModel.getFilepath());
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }
