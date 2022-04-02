@@ -46,17 +46,7 @@ public class FileModelAdapter extends ArrayAdapter<FileModel> {
         FileModel fileModel = this.objects.get(position);
         imageView.setImageBitmap(BitmapFactory.decodeFile( fileModel.getFilepath()));
         fileName.setText(fileModel.getFilename());
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(parent.getContext(), MainActivity2.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("filename", fileModel.getFilename());
-                bundle.putString("filepath",  fileModel.getFilepath());
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
+
         return convertView;
     }
 }

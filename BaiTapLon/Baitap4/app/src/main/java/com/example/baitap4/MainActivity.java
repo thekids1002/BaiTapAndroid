@@ -13,9 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private String currentPhotoPath;
     public static final int CAMERA_REQUEST_CODE = 102;
     private String dirPath = "/storage/emulated/0/Android/data/com.example.baitap4/files/Pictures/";
+    private final long TIME_PUSH_NOTIFI = 5; // thoừi gian mặc định 5s
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         checkPermisson();
         addControl();
         getFileInDir();
+        addEvent();
+        registerForContextMenu(lvFile);
     }
 
     @Override
@@ -112,6 +118,69 @@ public class MainActivity extends AppCompatActivity {
         getFileInDir();
         fileModelAdapter = new FileModelAdapter(MainActivity.this, R.layout.listview_custom, fileModel);
         lvFile.setAdapter(fileModelAdapter);
+    }
+
+    private void addEvent() {
+        lvFile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                showImage(i);
+            }
+        });
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int index = info.position;
+        switch (item.getItemId()) {
+            case R.id.menu_ct_view:
+                showImage(index);
+                return true;
+            case R.id.menu_ct_delete:
+                deleteFile(fileModel.get(index).getFilepath());
+                getFileInDir();
+                fileModelAdapter.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    public boolean deleteFile(String path) {
+        try {
+            File f = new File(path);//full path like c:/home/ri
+            if (f.exists()) {
+                return f.delete();
+            } else {
+                try {
+                    //f.createNewFile();//this will create a file
+                    f.mkdir();//this create a folder
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
+
+    private void showImage(int i) {
+        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("filename", fileModel.get(i).getFilename());
+        bundle.putString("filepath", fileModel.get(i).getFilepath());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     public void getFileInDir() { // đọc các file trong thư mục rồi đưa lên danh sách
@@ -218,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private final long TIME_PUSH_NOTIFI = 5; // thoừi gian mặc định 5s
 
     //
 //    private void pushNoti() {
