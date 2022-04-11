@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        pushNoti();
         startService(new Intent(this, ShowNotification.class));
     }
 
@@ -283,8 +282,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
-
-
             }
 
             if (photoFile != null) {
