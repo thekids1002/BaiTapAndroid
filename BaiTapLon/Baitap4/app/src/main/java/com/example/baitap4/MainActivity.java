@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import Adapter.FileModelAdapter;
@@ -98,14 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        pushNoti();
         super.onDestroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
     }
 
     public void closeApp(View view) {
@@ -115,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
     private void addControl() {
         ActionBar actionBar = getSupportActionBar();
         lvFile = findViewById(R.id.lvfile);
+        lvFile.setSmoothScrollbarEnabled(true);
         getFileInDir();
         fileModelAdapter = new FileModelAdapter(MainActivity.this, R.layout.listview_custom, fileModel);
         lvFile.setAdapter(fileModelAdapter);
         registerForContextMenu(lvFile);
+
     }
 
     private void addEvent() {
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 showImage(index);
                 return true;
             case R.id.menu_ct_delete:
-                if (deleteFile(fileModel.get(index).getFilepath())) {
+                if(deleteFile(fileModel.get(index).getFilepath())){
                     Toast.makeText(MainActivity.this, "File Deleted", Toast.LENGTH_SHORT).show();
                 }
                 getFileInDir();
@@ -159,13 +160,12 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean deleteFile(String path) {
         try {
-            File f = new File(path);//full path like c:/home/ri
+            File f = new File(path);
             if (f.exists()) {
                 return f.delete();
             } else {
                 try {
-                    //f.createNewFile();//this will create a file
-                    f.mkdir();//this create a folder
+                    f.mkdir();
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -189,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
     public void getFileInDir() { // đọc các file trong thư mục rồi đưa lên danh sách
         files = new File[]{};
         File directory = new File(dirPath);
-        if (directory.exists()) {
+        if(directory.exists()){
             files = directory.listFiles();
             fileModel.clear();
-            if (files.length > 0) {
+            if(files.length > 0){
                 for (int i = 0; i < files.length; i++) {
                     fileModel.add(new FileModel(files[i].getName(), files[i].getAbsolutePath()));
                 }
@@ -229,8 +229,6 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
             int cameraPermission = ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.CAMERA);
-
-
             if (writePermission != PackageManager.PERMISSION_GRANTED ||
                     readPermission != PackageManager.PERMISSION_GRANTED ||
                     cameraPermission != PackageManager.PERMISSION_GRANTED) {
@@ -249,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST_CODE) {
             getFileInDir();
             fileModelAdapter.notifyDataSetChanged();
+            pushNoti();
 
         }
     }
@@ -309,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (TIME_PUSH_NOTIFI * 1000), pendingIntent);
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis(),
+                TIME_PUSH_NOTIFI * 1000, pendingIntent);
     }
 }
