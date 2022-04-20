@@ -37,7 +37,6 @@ import java.util.Date;
 import Adapter.FileModelAdapter;
 import Model.FileModel;
 import Utils.ReminderBoardCast;
-import Utils.ShowNotification;
 
 // #################################################################
 // #                             _`
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        startService(new Intent(this, ShowNotification.class));
+
     }
 
     public void closeApp(View view) {
@@ -147,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 showImage(index);
                 return true;
             case R.id.menu_ct_delete:
-                if(deleteFile(fileModel.get(index).getFilepath())){
+                if (deleteFile(fileModel.get(index).getFilepath())) {
                     Toast.makeText(MainActivity.this, "File Deleted", Toast.LENGTH_SHORT).show();
                 }
                 getFileInDir();
@@ -190,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
     public void getFileInDir() { // đọc các file trong thư mục rồi đưa lên danh sách
         files = new File[]{};
         File directory = new File(dirPath);
-        if(directory.exists()){
+        if (directory.exists()) {
             files = directory.listFiles();
             fileModel.clear();
-            if(files.length > 0){
+            if (files.length > 0) {
                 for (int i = 0; i < files.length; i++) {
                     fileModel.add(new FileModel(files[i].getName(), files[i].getAbsolutePath()));
                 }
@@ -256,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -294,18 +292,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    //
-//    private void pushNoti() {
-//        Intent notificationIntent = new Intent(getApplicationContext(), ShowNotification.class);
-//        PendingIntent contentIntent = PendingIntent.getService(getApplicationContext(), 0, notificationIntent,
-//                PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        am.cancel(contentIntent);
-//        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-//                + TIME_PUSH_NOTIFI, contentIntent);
-//    }
     private void createNotificationChanel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "notifyAppSelfyChannel";
