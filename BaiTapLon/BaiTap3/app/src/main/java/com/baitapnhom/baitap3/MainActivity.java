@@ -198,10 +198,26 @@ public class MainActivity extends AppCompatActivity {
             }
             return content.toString();
         }
-
+        public String formatDecimal(float number) {
+            float epsilon = 0.004f; // 4 tenths of a cent
+            if (Math.abs(Math.round(number) - number) < epsilon) {
+                return String.format("%10.0f", number); // sdb
+            } else {
+                return String.format("%10.2f", number); // dj_segfault
+            }
+        }
         @Override
         protected void onPostExecute(String s) {
             try {
+                if(txtCurrencyFrom.getText().toString().isEmpty() || txtCurrencyFrom.getText().toString() == ""){
+                    txtCurrencyTo.setText("");
+                    dialog.dismiss();
+                    return;
+                }
+                if(currency1 == null || currency2 == null){
+                    dialog.dismiss();
+                    return;
+                }
                 XMLDOMParser parser = new XMLDOMParser();
                 Document document = parser.getDocument(s);
                 NodeList nodeList = document.getElementsByTagName("item");
@@ -224,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 Float value = Float.parseFloat(txtCurrencyFrom.getText().toString().trim());
                 Float b = Float.parseFloat(arrcurency[1].trim());
                 Float c = value * b ;
-                txtCurrencyTo.setText(c+"");
+                txtCurrencyTo.setText(formatDecimal(c)+"");
                 super.onPostExecute(s);
                 if (dialog.isShowing()) {
                     dialog.dismiss();
