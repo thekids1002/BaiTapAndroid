@@ -2,6 +2,7 @@ package com.baitapnhom.baitap3;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -31,26 +32,28 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import Model.Currency;
+import Model.HistoryCurrency;
+import Utils.MyDatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
+    DecimalFormat sdf = new DecimalFormat("###,###.###");
     EditText txtCurrencyFrom, txtCurrencyTo;
     ImageView ImageCountryFrom, ImageCountryTo;
     Spinner spn_from, spn_to;
     TextView CurrencyCodeFrom, CurrencyCodeTo, txtcurrency;
     ImageButton btnChangeCurrent, btnChangeCurrent2;
     private Currency currency1, currency2;
-    Button btnConver;
+    Button btnConver , btnHistory;
     public static ArrayList<Currency> currencies = new ArrayList<Currency>();
     public static ArrayList<String> currStrings = new ArrayList<String>();
     private ProgressDialog dialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         addControl();
         addEvent();
@@ -65,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                     if (currencies.isEmpty()) {
                         return;
                     }
-               //     Toast.makeText(getApplicationContext(), "ImageCountryFrom", Toast.LENGTH_SHORT).show();
                     String url = "https://img.geonames.org/flags/m/" + currencies.get(i).getCountryCode().toLowerCase() + ".png";
                     Picasso.get().load(url).into(ImageCountryFrom);
                     CurrencyCodeFrom.setText(currencies.get(i).getCurrencyCode());
@@ -88,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     if (currencies.isEmpty()) {
                         return;
                     }
-             //       Toast.makeText(getApplicationContext(), "ImageCountryTo", Toast.LENGTH_SHORT).show();
                     String url = "https://img.geonames.org/flags/m/" + currencies.get(i).getCountryCode().toLowerCase() + ".png";
                     Picasso.get().load(url).into(ImageCountryTo);
                     CurrencyCodeTo.setText(currencies.get(i).getCurrencyCode());
@@ -108,30 +109,33 @@ public class MainActivity extends AppCompatActivity {
         btnChangeCurrent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 int index1 = 0;
                 int index2 = 0;
-                for (int i = 0; i < currencies.size(); i++) {
-                    if (currencies.get(i).getCountryCode().toLowerCase().equals(currency1.getCountryCode().toLowerCase())) {
-                        index1 = i;
-                        Log.e("CCCCCCCCCCC", index1 + "");
-
-                    }
-                    if (currencies.get(i).getCountryCode().toLowerCase().equals(currency2.getCountryCode().toLowerCase())) {
-                        index2 = i;
-                        Log.e("CCCCCCCCCCC", index2 + "");
-                    }
+                try {
+                     index1 = spn_from.getSelectedItemPosition();
+                     index2 = spn_to.getSelectedItemPosition();
+                     spn_from.setSelection(index2);
+                     spn_to.setSelection(index1);
                 }
-                spn_from.setSelection(index2);
-                spn_to.setSelection(index1);
+                catch (Exception e ){
+                    e.printStackTrace();
+                }
             }
         });
 
         btnConver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Converter converter = new Converter();
+                ConverterAsynctask converter = new ConverterAsynctask();
                 converter.execute();
+            }
+        });
+
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, history_activity.class);
+                startActivity(intent);
             }
         });
     }
@@ -159,13 +163,13 @@ public class MainActivity extends AppCompatActivity {
         CurrencyCodeFrom = findViewById(R.id.CurrencyCodeFrom);
         CurrencyCodeTo = findViewById(R.id.CurrencyCodeTo);
         btnConver = findViewById(R.id.btnConvert);
-
+        btnHistory = findViewById(R.id.btnHistory);
 
     }
 
-    class Converter extends AsyncTask<String, Void, String> {
+    class ConverterAsynctask extends AsyncTask<String, Void, String> {
 
-    public Converter(){
+    public ConverterAsynctask(){
         dialog = new ProgressDialog(MainActivity.this);
     }
         @Override
@@ -198,17 +202,11 @@ public class MainActivity extends AppCompatActivity {
             }
             return content.toString();
         }
-        public String formatDecimal(float number) {
-            float epsilon = 0.004f; // 4 tenths of a cent
-            if (Math.abs(Math.round(number) - number) < epsilon) {
-                return String.format("%10.0f", number); // sdb
-            } else {
-                return String.format("%10.2f", number); // dj_segfault
-            }
-        }
+
         @Override
         protected void onPostExecute(String s) {
             try {
+
                 if(txtCurrencyFrom.getText().toString().isEmpty() || txtCurrencyFrom.getText().toString() == ""){
                     txtCurrencyTo.setText("");
                     dialog.dismiss();
@@ -240,7 +238,12 @@ public class MainActivity extends AppCompatActivity {
                 Float value = Float.parseFloat(txtCurrencyFrom.getText().toString().trim());
                 Float b = Float.parseFloat(arrcurency[1].trim());
                 Float c = value * b ;
-                txtCurrencyTo.setText(formatDecimal(c)+"");
+                txtCurrencyTo.setText(sdf.format(c));
+                HistoryCurrency his = new HistoryCurrency();
+                String title =  currency1.getCurrencyCode() + " = > " + currency2.getCurrencyCode() ; // USD => VND
+                his.setTitle(title);
+                his.setValues( a + " => " + c ); // 119 => 2500000
+                saveHistory(his);
                 super.onPostExecute(s);
                 if (dialog.isShowing()) {
                     dialog.dismiss();
@@ -257,6 +260,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    private void saveHistory(HistoryCurrency his) {
+        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(this);
+        databaseHelper.addCurrency(his);
     }
 
     class CurrencyAsyntask extends AsyncTask<Void, Void, ArrayList<Model.Currency>> {

@@ -77,7 +77,6 @@ public class InfoCountryActivity extends AppCompatActivity {
             dialog.setMessage("Đang tải dữ liệu vui lòng chờ");
             dialog.show();
         }
-
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             population.setText(sdf.format(Double.parseDouble(country.getPopulation())));
