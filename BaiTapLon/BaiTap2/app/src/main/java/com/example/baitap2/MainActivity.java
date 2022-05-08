@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (jsonObject.has("countryCode")) {
                         String country_code = jsonObject.getString("countryCode").toLowerCase();
-                        String link_image = "https://img.geonames.org/flags/x/" + country_code + ".gif";
+                        String link_image = "http://img.geonames.org/flags/x/" + country_code + ".gif";
                         country.setImage(link_image);
                         country.setCountryMap(country_code);
                     }

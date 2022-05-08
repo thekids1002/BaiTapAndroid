@@ -1,4 +1,4 @@
-package com.baitapandroid2.bai5;
+package com.example.baitap2_c5;
 
 import org.junit.Test;
 

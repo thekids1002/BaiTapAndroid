@@ -57,7 +57,7 @@ public class InfoCountryActivity extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(Void... voids) {
             try {
-                final String MAPURL = "https://img.geonames.org/img/country/250/" + country.getCountryMap().toUpperCase() + ".png";
+                final String MAPURL = "http://img.geonames.org/img/country/250/" + country.getCountryMap().toUpperCase() + ".png";
                 Log.e("Err", "doInBackground: " + MAPURL);
                 URL url = new URL(MAPURL);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
