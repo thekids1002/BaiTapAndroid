@@ -16,7 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Baitap4">
         <activity
-            android:name=".MainActivity2"
+            android:name=".ConfirmImageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ImageDisplayActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
@@ -38,9 +41,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <receiver android:name="Utils.ReminderBoardCast">
-
-        </receiver>
+        <receiver android:name="Utils.ReminderBroadCast"></receiver>
     </application>
 
 </manifest>

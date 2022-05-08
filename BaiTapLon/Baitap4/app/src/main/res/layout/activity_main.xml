@@ -11,5 +11,7 @@
     <ListView
         android:id="@+id/lvfile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:smoothScrollbar="true"
+        />
 </LinearLayout>

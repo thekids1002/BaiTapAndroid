@@ -1,18 +1,22 @@
 package com.example.baitap4;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,8 +32,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,39 +43,8 @@ import java.util.Date;
 
 import Adapter.FileModelAdapter;
 import Model.FileModel;
-import Utils.ReminderBoardCast;
+import Utils.ReminderBroadCast;
 
-// #################################################################
-// #                             _`
-// #                          _ooOoo_
-// #                         o8888888o
-// #                         88" . "88
-// #                         (| -_- |)
-// #                         O\  =  /O
-// #                      ____/`---'\____
-// #                    .'  \\|     |//  `.
-// #                   /  \\|||  :  |||//  \
-// #                  /  _||||| -:- |||||_  \
-// #                  |   | \\\  -  /'| |   |
-// #                  | \_|  `\`---'//  |_/ |
-// #                  \  .-\__ `-. -'__/-.  /
-// #                ___`. .'  /--.--\  `. .'___
-// #             ."" '<  `.___\_<|>_/___.' _> \"".
-// #            | | :  `- \`. ;`. _/; .'/ /  .' ; |
-// #            \  \ `-.   \_\_`. _.'_/_/  -' _.' /
-// #=============`-.`___`-.__\ \___  /__.-'_.'_.-'=================#
-//                            `=--=-'
-//           _.-/`)
-//          // / / )
-//       .=// / / / )
-//      //`/ / / / /
-//     // /     ` /
-//    ||         /
-//     \\       /
-//      ))    .'
-//     //    /
-//          /
-// Nếu không load ảnh thì sửa file path dòng 92 , không biết lấy đường dẫn tương đối.
 public class MainActivity extends AppCompatActivity {
     private ListView lvFile;
     private ArrayList<FileModel> fileModel = new ArrayList<FileModel>();
@@ -77,14 +52,15 @@ public class MainActivity extends AppCompatActivity {
     private File[] files;
     private String currentPhotoPath;
     public static final int CAMERA_REQUEST_CODE = 102;
-    private String dirPath = "/storage/emulated/0/Android/data/com.example.baitap4/files/Pictures/";
-    private final long TIME_PUSH_NOTIFI = 5; // thoừi gian mặc định 5s
+    public static final int CONFRIM_CODE = 103;
+    private String dirPath = Environment.getExternalStorageDirectory().toString() +
+            "/Android/data/com.example.baitap4/files/Pictures/";
+    private final long TIME_PUSH_NOTIFI = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createNotificationChanel();
         checkPermisson();
         addControl();
         getFileInDir();
@@ -92,36 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    public void closeApp(View view) {
-        finish();
-    }
-
+    // component
     private void addControl() {
-        ActionBar actionBar = getSupportActionBar();
         lvFile = findViewById(R.id.lvfile);
         lvFile.setSmoothScrollbarEnabled(true);
-        getFileInDir();
         fileModelAdapter = new FileModelAdapter(MainActivity.this, R.layout.listview_custom, fileModel);
         lvFile.setAdapter(fileModelAdapter);
         registerForContextMenu(lvFile);
-
     }
 
+
+    // event
     private void addEvent() {
         lvFile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -131,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // context Menu
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -158,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // file
+
+
     public boolean deleteFile(String path) {
         try {
             File f = new File(path);
@@ -167,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     f.mkdir();
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -177,16 +137,9 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void showImage(int i) {
-        Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("filename", fileModel.get(i).getFilename());
-        bundle.putString("filepath", fileModel.get(i).getFilepath());
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     public void getFileInDir() { // đọc các file trong thư mục rồi đưa lên danh sách
+       Log.e("TAG",getApplicationInfo().dataDir.toString());
+
         files = new File[]{};
         File directory = new File(dirPath);
         if(directory.exists()){
@@ -197,10 +150,22 @@ public class MainActivity extends AppCompatActivity {
                     fileModel.add(new FileModel(files[i].getName(), files[i].getAbsolutePath()));
                 }
             }
+            if (files != null){
+                fileModelAdapter.notifyDataSetChanged();
+            }
         }
 
     }
 
+    private void showImage(int i) {
+        Intent intent = new Intent(MainActivity.this, ImageDisplayActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("filename", fileModel.get(i).getFilename());
+        bundle.putString("filepath", fileModel.get(i).getFilepath());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+    // Option menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mymenu, menu);
@@ -219,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    // ask permisson
     private void checkPermisson() {
         if (android.os.Build.VERSION.SDK_INT >= 23) {
 
@@ -240,15 +205,34 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
+    // take photo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST_CODE) {
-            getFileInDir();
-            fileModelAdapter.notifyDataSetChanged();
-            pushNoti();
+            Intent intent = new Intent(MainActivity.this, ConfirmImageActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("filepath", currentPhotoPath);
+            intent.putExtras(bundle);
+            startActivityForResult(intent,CONFRIM_CODE);
+        }
+        if (requestCode == CONFRIM_CODE){
+            if(resultCode == Activity.RESULT_OK) {
+                final String result = data.getStringExtra(ConfirmImageActivity.EXTRA_DATA);
+                if(result.equals("save")){
+                    getFileInDir();
+                    pushNoti();
+                }
+                else if(result.equals("delete")){
+                    if (deleteFile(currentPhotoPath)){
+                        Toast.makeText(getApplicationContext(), "File Deleted", Toast.LENGTH_SHORT).show();
+                        dispatchTakePictureIntent();
+                    }
+                }
+                else{
 
+                }
+            }
         }
     }
 
@@ -285,18 +269,23 @@ public class MainActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
             }
+            // fix xiaomi device
+            if(photoFile.length() == 0){
+                deleteFile(currentPhotoPath);
+            }
         }
     }
-
+    // notification
     private void createNotificationChanel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "notifyAppSelfyChannel";
             String des = "Channel";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel notificationChannel = new NotificationChannel("notifyAppSelfy", name, importance);
+            NotificationChannel notificationChannel = new NotificationChannel(ReminderBroadCast.CHANNEL_ID, name, importance);
             notificationChannel.setDescription(des);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(notificationChannel);
@@ -304,11 +293,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pushNoti() {
-        Intent intent = new Intent(MainActivity.this, ReminderBoardCast.class);
+
+        createNotificationChanel();
+        Intent intent = new Intent(MainActivity.this, ReminderBroadCast.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis(),
                 TIME_PUSH_NOTIFI * 1000, pendingIntent);
     }
+
 }
