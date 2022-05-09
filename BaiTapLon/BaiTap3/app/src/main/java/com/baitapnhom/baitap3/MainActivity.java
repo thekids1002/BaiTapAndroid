@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     if (currencies.isEmpty()) {
                         return;
                     }
-                    String url = "https://img.geonames.org/flags/m/" + currencies.get(i).getCountryCode().toLowerCase() + ".png";
+                    String url = "http://img.geonames.org/flags/x/" + currencies.get(i).getCountryCode().toLowerCase() + ".gif";
                     Picasso.get().load(url).into(ImageCountryFrom);
                     CurrencyCodeFrom.setText(currencies.get(i).getCurrencyCode());
                     currency1 = new Currency();
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     if (currencies.isEmpty()) {
                         return;
                     }
-                    String url = "https://img.geonames.org/flags/m/" + currencies.get(i).getCountryCode().toLowerCase() + ".png";
+                    String url = "http://img.geonames.org/flags/x/" + currencies.get(i).getCountryCode().toLowerCase() + ".gif";
                     Picasso.get().load(url).into(ImageCountryTo);
                     CurrencyCodeTo.setText(currencies.get(i).getCurrencyCode());
                     currency2 = new Currency();
@@ -240,9 +240,10 @@ public class MainActivity extends AppCompatActivity {
                 Float c = value * b ;
                 txtCurrencyTo.setText(sdf.format(c));
                 HistoryCurrency his = new HistoryCurrency();
-                String title =  currency1.getCurrencyCode() + " = > " + currency2.getCurrencyCode() ; // USD => VND
-                his.setTitle(title);
-                his.setValues( a + " => " + c ); // 119 => 2500000
+                his.setSpn_from(currency1.getCurrencyCode());
+                his.setSpn_to(currency2.getCurrencyCode());
+                his.setValue_from(sdf.format(value));
+                his.setValue_to(sdf.format(c));
                 saveHistory(his);
                 super.onPostExecute(s);
                 if (dialog.isShowing()) {

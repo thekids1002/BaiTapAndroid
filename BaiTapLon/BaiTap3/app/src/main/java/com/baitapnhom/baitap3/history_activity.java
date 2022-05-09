@@ -9,13 +9,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import Adapter.HistoryAdapter;
 import Model.HistoryCurrency;
 import Utils.MyDatabaseHelper;
 
 public class history_activity extends AppCompatActivity {
     private ListView listHistory;
     private ArrayList<HistoryCurrency> historyCurrencyArrayList ;
-    private ArrayAdapter<HistoryCurrency> adapter;
+    private HistoryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class history_activity extends AppCompatActivity {
         historyCurrencyArrayList = new ArrayList<HistoryCurrency>();
         historyCurrencyArrayList.clear();
         historyCurrencyArrayList = new MyDatabaseHelper(this).getAllHistory();
-        adapter = new ArrayAdapter<HistoryCurrency>(history_activity.this, android.R.layout.simple_list_item_1,historyCurrencyArrayList);
+        adapter = new HistoryAdapter(history_activity.this, R.layout.custom_listview,historyCurrencyArrayList);
         listHistory.setAdapter(adapter);
     }
 }
