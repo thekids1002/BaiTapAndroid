@@ -1,4 +1,5 @@
 package com.baitapnhom.baitap2;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -7,16 +8,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
 import Adapter.CountryAdapter;
 import Model.Country;
 import Util.CustomProgressDialog;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Country> temp = new ArrayList<>();
     private ListView listView;
     private SearchView searchView;
+    private boolean isFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void addControl() {
+        listView = findViewById(R.id.lvquocgia);
+        countryAdapter = new CountryAdapter(MainActivity.this, lazy_load_countries);
+        ContryTask contacTask = new ContryTask();
+        contacTask.execute();
+        listView.setAdapter(countryAdapter);
+        searchView = findViewById(R.id.search_bar);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        listView.setTextFilterEnabled(true);
+
+    }
+
     private void addEvents() {
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             Country country = lazy_load_countries.get(i);
             Intent intent = new Intent(MainActivity.this, InfoCountryActivity.class);
-            intent.putExtra("getCountry_name",country.getCountry_name());
+            intent.putExtra("getCountry_name", country.getCountry_name());
             intent.putExtra("getCountryMap", country.getCountryMap());
             intent.putExtra("getCapital", country.getCapital());
             intent.putExtra("getAreaInSqKm", country.getAreaInSqKm());
@@ -57,76 +76,83 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-                    if(countries.isEmpty()){
+                if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0 && !isFilter) {
+                    if (countries.isEmpty()) {
                         return;
                     }
-                    for(int i = totalItemCount; i < totalItemCount + 7 ; ++i){
-                        if(totalItemCount ==(countries.size() -1)){
-                            break;
+                    try {
+                        for (int i = totalItemCount; i < totalItemCount + 7; ++i) {
+                            if (totalItemCount == (countries.size() - 1)) {
+                                break;
+                            }
+                            Country country = countries.get(i);
+                            System.out.println("Cái gì đấy " + i + country.getCountry_name());
+                            lazy_load_countries.add(country);
+                            for (Country country1 : lazy_load_countries) {
+                                System.out.println("LazyLoad" + country1.getCountry_name());
+                            }
                         }
-                       try {
-                           Country country = countries.get(i);
-                           lazy_load_countries.add(country);
-                       }
-                       catch (Exception e){
-                       }
+                        countryAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
                     }
-                    countryAdapter.notifyDataSetChanged();
 
                 }
             }
 
         });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return  false;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                countryAdapter.getFilter().filter(newText);
-//                if(newText.isEmpty()){
+//                if(TextUtils.isEmpty(newText) || newText.length() == 0 || newText.equals("")){
+//                    isSearch = false;
+//                    for (Country country : lazy_load_countries){
+//                        Log.e("Tag",country.getCountry_name());
+//                    }
 //                    countryAdapter = new CountryAdapter(MainActivity.this,R.layout.listview_custom,lazy_load_countries);
 //                    listView.setAdapter(countryAdapter);
-//                    return true;
 //                }
 //                else{
-//                    temp.clear();
-//                    for(int i = 0 ; i < countries.size(); i++){
+//                    isSearch = true;
+//                    countryAdapter.clear();
+//                    for (int i = 0 ; i < countries.size() ; i++){
 //                        if(countries.get(i).getCountry_name().toLowerCase().contains(newText.toLowerCase())){
-//                            temp.add(countries.get(i));
+//                            countryAdapter.add(countries.get(i));
 //                        }
 //                    }
-//                    countryAdapter = new CountryAdapter(MainActivity.this,R.layout.listview_custom,temp);
-//                    listView.setAdapter(countryAdapter);
+//
+//                    //
 //                }
-                return false;
+//                countryAdapter.notifyDataSetChanged();
+                if (newText.isEmpty()) {
+                    listView.clearTextFilter();
+                    isFilter = false;
+                    return false;
+                } else {
+                    isFilter = true;
+                    countryAdapter.getFilter().filter(newText);
+                    return false;
+                }
+
 
             }
         });
     }
 
-    private void addControl() {
-        listView = findViewById(R.id.lvquocgia);
-        countryAdapter = new CountryAdapter(MainActivity.this, R.layout.listview_custom, lazy_load_countries);
-        ContryTask contacTask = new ContryTask();
-        contacTask.execute();
-        listView.setAdapter(countryAdapter);
-        searchView = findViewById(R.id.search_bar);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-    }
-
     class ContryTask extends AsyncTask<Void, Void, ArrayList<Country>> {
-       // private ProgressDialog dialog;
-        private CustomProgressDialog lottie ;
+        // private ProgressDialog dialog;
+        private CustomProgressDialog lottie;
 
         public ContryTask() {
-          //  dialog = new ProgressDialog(MainActivity.this);
-            lottie  = new CustomProgressDialog(MainActivity.this);
+            //  dialog = new ProgressDialog(MainActivity.this);
+            lottie = new CustomProgressDialog(MainActivity.this);
         }
 
         @Override
@@ -195,16 +221,10 @@ public class MainActivity extends AppCompatActivity {
             if (lottie.isShowing()) {
                 lottie.dismiss();
             }
-            int temp = 0;
-            for (int i = 0; i < countries.size(); i++) {
-                if (temp == 7) {
-                    break;
-                }
+            for (int i = 0; i < 6; i++) {
                 Country countrySelected = countries.get(i);
                 Log.e("TAGGGGGGGGGGGGG", countrySelected.toString());
                 lazy_load_countries.add(countrySelected);
-                countries.remove(i);
-                temp++;
             }
             countryAdapter.notifyDataSetChanged();
         }
