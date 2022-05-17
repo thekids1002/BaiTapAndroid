@@ -7,7 +7,18 @@
     android:orientation="vertical"
     android:padding="@dimen/_16sdp"
     tools:context=".InfoCountryActivity">
-
+    <TextView
+        android:id="@+id/MapName"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_30sdp"
+        android:textSize="@dimen/_15sdp"
+        android:text="Bản đồ Việt Nam"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:fontFamily="@font/rubik2"
+        />
     <ImageView
         android:id="@+id/countryMaps"
         android:layout_width="match_parent"
@@ -15,15 +26,20 @@
         android:layout_weight="1"
         />
     <TableLayout
+        android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="0,1"
         >
         <TableRow>
             <TextView
+
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:text="Dân số :"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/rubik2"
                 android:layout_gravity="start"
                 android:textSize="@dimen/_20sdp"/>
             <TextView
@@ -31,24 +47,34 @@
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:text=""
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik2"
                 android:layout_gravity="start"
                 android:paddingLeft="@dimen/_5sdp"
                 android:textSize="@dimen/_20sdp"/>
         </TableRow>
         <TableRow>
+
             <TextView
-                android:layout_height="match_parent"
                 android:layout_width="wrap_content"
-                android:text="Diện tích :"
+                android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:textSize="@dimen/_20sdp"/>
+                android:fontFamily="@font/rubik2"
+                android:text="Diện tích :"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/areaInSqKm"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:text=""
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik2"
                 android:layout_gravity="start"
                 android:paddingLeft="@dimen/_5sdp"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_20sdp"/>
         </TableRow>
         <TableRow>
@@ -56,14 +82,20 @@
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:text="Thủ đô :"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/rubik2"
                 android:layout_gravity="start"
                 android:textSize="@dimen/_20sdp"/>
             <TextView
                 android:id="@+id/capital"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik2"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:paddingLeft="@dimen/_5sdp"
                 android:text=""
+                android:textColor="@color/black"
                 android:layout_gravity="start"
                 android:textSize="@dimen/_20sdp"/>
         </TableRow>

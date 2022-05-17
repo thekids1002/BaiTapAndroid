@@ -1,32 +1,26 @@
-package com.example.baitap2;
-
-import android.app.ProgressDialog;
+package com.baitapnhom.baitap2;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
+import android.widget.AbsListView;
 import android.widget.ListView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
 import Adapter.CountryAdapter;
 import Model.Country;
+import Util.CustomProgressDialog;
 
 public class MainActivity extends AppCompatActivity {
     private CountryAdapter countryAdapter;
-    private Country country;
-    public static ArrayList<Country> countries = new ArrayList<Country>();
+    public static ArrayList<Country> countries = new ArrayList<>();
+    public static ArrayList<Country> lazy_load_countries = new ArrayList<>();
     private ListView listView;
 
     @Override
@@ -35,37 +29,67 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         addControl();
         addEvents();
-
     }
 
     private void addEvents() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            Country country = lazy_load_countries.get(i);
+            Intent intent = new Intent(MainActivity.this, InfoCountryActivity.class);
+            intent.putExtra("getCountry_name",country.getCountry_name());
+            intent.putExtra("getCountryMap", country.getCountryMap());
+            intent.putExtra("getCapital", country.getCapital());
+            intent.putExtra("getAreaInSqKm", country.getAreaInSqKm());
+            intent.putExtra("getPopulation", country.getPopulation());
+            startActivity(intent);
+        });
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Country country = countries.get(i);
-                Intent intent = new Intent(MainActivity.this, InfoCountryActivity.class);
-                intent.putExtra("CountryInfo", country);
-                startActivity(intent);
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
             }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
+
+                    if(countries.isEmpty()){
+                        return;
+                    }
+                    for(int i = totalItemCount; i < totalItemCount + 7 ; ++i){
+                        if(totalItemCount ==(countries.size() -1)){
+                            break;
+                        }
+                       try {
+                           Country country = countries.get(i);
+                           lazy_load_countries.add(country);
+                       }
+                       catch (Exception e){
+
+                       }
+                    }
+                    countryAdapter.notifyDataSetChanged();
+
+                }
+            }
+
         });
     }
 
     private void addControl() {
-
         listView = findViewById(R.id.lvquocgia);
-        countryAdapter = new CountryAdapter(MainActivity.this, R.layout.listview_custom, countries);
+        countryAdapter = new CountryAdapter(MainActivity.this, R.layout.listview_custom, lazy_load_countries);
         ContryTask contacTask = new ContryTask();
         contacTask.execute();
         listView.setAdapter(countryAdapter);
-
     }
 
-
     class ContryTask extends AsyncTask<Void, Void, ArrayList<Country>> {
-        private ProgressDialog dialog;
+       // private ProgressDialog dialog;
+        private CustomProgressDialog lottie ;
 
         public ContryTask() {
-            dialog = new ProgressDialog(MainActivity.this);
+          //  dialog = new ProgressDialog(MainActivity.this);
+            lottie  = new CustomProgressDialog(MainActivity.this);
         }
 
         @Override
@@ -107,12 +131,11 @@ public class MainActivity extends AppCompatActivity {
                         String capital = jsonObject.getString("capital");
                         country.setCapital(capital);
                     }
-                    System.out.println(country.toString());
+
                     ds.add(country);
                 }
             } catch (Exception e) {
                 Log.e("Loi", e.toString());
-
             }
             return ds;
         }
@@ -120,24 +143,34 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            countryAdapter.clear();
-            dialog.setMessage("Đang tải dữ liệu vui lòng chờ");
-            dialog.show();
+            countries.clear();
+//            dialog.setMessage("Đang tải dữ liệu vui lòng chờ");
+//            dialog.setCanceledOnTouchOutside(false);
+//            dialog.show();
+            lottie.show();
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Country> countries) {
-            super.onPostExecute(countries);
-            countryAdapter.clear();
-            countryAdapter.addAll(countries);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
+        protected void onPostExecute(ArrayList<Country> countriesList) {
+//            countryAdapter.clear();
+//            countryAdapter.addAll(countries);
+            countries.addAll(countriesList);
+            if (lottie.isShowing()) {
+                lottie.dismiss();
             }
+            int temp = 0;
+            for (int i = 0; i < countries.size(); i++) {
+                if (temp == 7) {
+                    break;
+                }
+                Country countrySelected = countries.get(i);
+                Log.e("TAGGGGGGGGGGGGG", countrySelected.toString());
+                lazy_load_countries.add(countrySelected);
+                countries.remove(i);
+                temp++;
+            }
+            countryAdapter.notifyDataSetChanged();
         }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
     }
 }

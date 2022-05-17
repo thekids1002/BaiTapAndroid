@@ -10,6 +10,15 @@ public class Country implements Serializable {
     private String population;
     private String areaInSqKm;
     private String countryMap;
+    private Bitmap bitmapImage;
+
+    public Bitmap getBitmapImage() {
+        return bitmapImage;
+    }
+
+    public void setBitmapImage(Bitmap bitmapImage) {
+        this.bitmapImage = bitmapImage;
+    }
 
     public String getCountryMap() {
         return countryMap;
