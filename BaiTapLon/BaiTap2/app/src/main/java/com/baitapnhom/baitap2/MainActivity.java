@@ -1,4 +1,6 @@
 package com.baitapnhom.baitap2;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -6,6 +8,8 @@ import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -21,7 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private CountryAdapter countryAdapter;
     public static ArrayList<Country> countries = new ArrayList<>();
     public static ArrayList<Country> lazy_load_countries = new ArrayList<>();
+    public static ArrayList<Country> temp = new ArrayList<>();
     private ListView listView;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         addControl();
         addEvents();
+
     }
 
     private void addEvents() {
@@ -51,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
-
                     if(countries.isEmpty()){
                         return;
                     }
@@ -64,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                            lazy_load_countries.add(country);
                        }
                        catch (Exception e){
-
                        }
                     }
                     countryAdapter.notifyDataSetChanged();
@@ -72,6 +77,34 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return  false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                countryAdapter.getFilter().filter(newText);
+//                if(newText.isEmpty()){
+//                    countryAdapter = new CountryAdapter(MainActivity.this,R.layout.listview_custom,lazy_load_countries);
+//                    listView.setAdapter(countryAdapter);
+//                    return true;
+//                }
+//                else{
+//                    temp.clear();
+//                    for(int i = 0 ; i < countries.size(); i++){
+//                        if(countries.get(i).getCountry_name().toLowerCase().contains(newText.toLowerCase())){
+//                            temp.add(countries.get(i));
+//                        }
+//                    }
+//                    countryAdapter = new CountryAdapter(MainActivity.this,R.layout.listview_custom,temp);
+//                    listView.setAdapter(countryAdapter);
+//                }
+                return false;
+
+            }
         });
     }
 
@@ -81,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
         ContryTask contacTask = new ContryTask();
         contacTask.execute();
         listView.setAdapter(countryAdapter);
+        searchView = findViewById(R.id.search_bar);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
     }
 
     class ContryTask extends AsyncTask<Void, Void, ArrayList<Country>> {
@@ -154,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Country> countriesList) {
 //            countryAdapter.clear();
 //            countryAdapter.addAll(countries);
-            countries.addAll(countriesList);
+            countries.addAll(countriesList);//256
             if (lottie.isShowing()) {
                 lottie.dismiss();
             }

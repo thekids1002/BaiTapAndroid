@@ -2,30 +2,41 @@ package Adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.baitapnhom.baitap2.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+
 import Model.Country;
 import Util.BitmapManager;
 
-public class CountryAdapter extends ArrayAdapter<Country> {
+public class CountryAdapter extends ArrayAdapter<Country> implements Filterable {
     @NonNull
     Context context;
     int resource;
     @NonNull
-    List<Country> objects;
-    public CountryAdapter(@NonNull Context context, int resource, @NonNull List<Country> objects) {
+    ArrayList<Country> objects;
+    ArrayList<Country> search;
+    public CountryAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Country> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
         this.objects = objects;
+        this.search = new ArrayList<>(objects);
         BitmapManager.INSTANCE.setPlaceholder(BitmapFactory.decodeResource(
                 context.getResources(), R.drawable.load));
     }
@@ -45,57 +56,43 @@ public class CountryAdapter extends ArrayAdapter<Country> {
         }
         Country country = this.objects.get(position);
         holder.countryName.setText(country.getCountry_name());
-        //holder.areaInSqKm.setText(country.getAreaInSqKm());
-        //holder.population.setText(country.getPopulation());
-        // Picasso.get().load(country.getImage()).placeholder(R.drawable.progress_animation).into(holder.image_country);
-        //  holder.image_country.setImageBitmap(BitmapFactory.decodeStream((InputStream)new URL("http://www.mac-wallpapers.com/bulkupload/wallpapers/Apple%20Wallpapers/apple-black-logo-wallpaper.jpg").getContent()));
-//        if(checkbitmap(country.getBitmapImage())){
-//            Log.e("TAG Da co bit map", "ok");
-//            holder.image_country.setImageBitmap(country.getBitmapImage());
-//            return  convertView;
-//        }
-//        else{
-//            new Thread () {
-//                boolean success = false;
-//                public void run() {
-//                    try {
-//                        URL url = new URL(country.getImage());
-//                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                        connection.setDoInput(true);
-//                        connection.connect();
-//                        InputStream input = connection.getInputStream();
-//                        Bitmap myBitmap = BitmapFactory.decodeStream(input);
-//                        holder.image_country.setImageBitmap(myBitmap);
-//                        objects.get(position).setBitmapImage(myBitmap);
-//                        if(checkbitmap(objects.get(position).getBitmapImage())){
-//                            Log.e("Đã lưu bitmap",country.getImage());
-//                        }
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        success = false;
-//                    }
-////                mHandler.post(new Runnable() {
-////                    public void run() {
-////
-////                        try {
-////
-////                        }
-////                        catch (Exception e){
-////                            e.printStackTrace();
-////                        }
-////                    }
-////                });
-//                }
-//            }.start();
-//        }
-
-        BitmapManager.INSTANCE.loadBitmap(country.getImage(), holder.image_country, 100,
-                62);
+        Picasso.get().load(country.getImage()).placeholder(R.drawable.progress_animation).into(holder.image_country);
         return convertView;
     }
 
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        return searchFilter;
+    }
 
+    private Filter searchFilter  = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+           ArrayList<Country> filter = new ArrayList<>();
+           if(charSequence == null || charSequence.length() == 0){
+               filter.addAll(objects);
+           }
+           else{
+               String fillterPatern = charSequence.toString().toLowerCase().trim();
+               for (Country country : objects){
+                   if(country.getCountry_name().toLowerCase().contains(fillterPatern)){
+                       search.add(country);
+                   }
+               }
+           }
+           FilterResults filterResults =new FilterResults();
+           filterResults.values = filter;
+           return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            search.clear();
+            search.addAll((Collection<? extends Country>) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
     static class ViewHolder {
         ImageView image_country;

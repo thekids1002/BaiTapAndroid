@@ -6,9 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
     <TextView
-        android:id="@+id/noImage"
+        android:id="@+id/noImageInDeleted"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text= "Danh sách ảnh trống"
@@ -18,10 +17,9 @@
         android:textAlignment="center"
         />
     <ListView
-        android:id="@+id/lvfile"
+        android:id="@+id/lvfile_deleted"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:smoothScrollbar="true"
         />
-
 </LinearLayout>

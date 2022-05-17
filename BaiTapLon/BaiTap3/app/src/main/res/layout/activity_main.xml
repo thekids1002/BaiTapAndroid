@@ -4,30 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/_5sdp"
-    android:paddingRight="@dimen/_5sdp"
     android:scrollbars="none"
     tools:context=".MainActivity">
 
     <RelativeLayout
+        android:paddingTop="@dimen/_5sdp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/_5sdp"
-        android:paddingRight="@dimen/_5sdp">
+        >
 
         <LinearLayout
             android:id="@+id/layout1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_100sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="#282828"
+            android:background="#FFFFFF"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/_25sdp"
-            android:paddingRight="@dimen/_25sdp">
+            android:paddingLeft="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,22 +34,15 @@
 
                 <LinearLayout
                     android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_40sdp"
+                    android:layout_height="@dimen/_60sdp"
                     android:layout_weight="1"
+                    android:background="@drawable/border_shadow"
                     android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/ImageCountryFrom"
-                        android:layout_width="@dimen/_70sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY" />
 
                     <Spinner
                         android:id="@+id/spn_from"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_baseline_arrow_drop_down_24"
                         android:outlineAmbientShadowColor="@color/white"
                         android:outlineSpotShadowColor="@color/white"
                         android:popupBackground="@color/white"
@@ -61,29 +52,22 @@
                 <ImageButton
                     android:id="@+id/btnChangeCurrent"
                     android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_40sdp"
+                    android:layout_height="match_parent"
                     android:background="#00000000"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/exchange" />
 
                 <LinearLayout
                     android:layout_width="@dimen/_50sdp"
-                    android:layout_height="@dimen/_40sdp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="@drawable/border_shadow"
                     android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/ImageCountryTo"
-                        android:layout_width="@dimen/_70sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY" />
 
                     <Spinner
                         android:id="@+id/spn_to"
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/ic_baseline_arrow_drop_down_24"
                         android:outlineAmbientShadowColor="@color/white"
                         android:outlineSpotShadowColor="@color/white"
                         android:popupBackground="@color/white"
@@ -93,18 +77,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/currency"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_60sdp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text=""
                     android:textAlignment="center"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -114,8 +98,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/layout1"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_16sdp"
-            android:background="#282828"
+            android:background="@drawable/my_edit_text_border"
             android:orientation="vertical">
 
             <LinearLayout
@@ -125,7 +111,7 @@
                 android:layout_marginLeft="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginRight="@dimen/_15sdp"
-                android:background="@drawable/border"
+                android:background="@drawable/border_shadow"
                 android:orientation="vertical">
 
                 <EditText
@@ -133,15 +119,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
+                    android:layout_weight="3"
+                    android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:hint="Enter Value"
+                    android:hint="Nhập vào số tiền cần đổi"
                     android:inputType="numberDecimal"
+                    android:maxLength="15"
                     android:text=""
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="#000000"
+                    android:textColorHint="#9C9C9C"
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -151,6 +138,8 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="@color/white"
+                    android:fontFamily="@font/robotoregular"
                     android:gravity="center"
                     android:text="USD"
                     android:textAlignment="center"
@@ -161,16 +150,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_85sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:layout_marginLeft="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginRight="@dimen/_15sdp"
                 android:orientation="vertical">
 
                 <ImageButton
                     android:id="@+id/btnChangeCurrent2"
                     android:layout_width="@dimen/_85sdp"
-                    android:layout_height="@dimen/_85sdp"
+                    android:layout_height="@dimen/_50sdp"
                     android:layout_gravity="center"
                     android:background="#00000000"
                     android:scaleType="fitCenter"
@@ -182,9 +170,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_75sdp"
                 android:layout_marginLeft="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginRight="@dimen/_15sdp"
-                android:background="@drawable/border"
+                android:background="@drawable/border_shadow"
                 android:orientation="vertical">
 
                 <EditText
@@ -192,17 +179,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
+                    android:layout_weight="3"
+                    android:background="@color/white"
                     android:editable="false"
                     android:focusable="false"
+                    android:fontFamily="@font/robotoregular"
                     android:gravity="center"
                     android:hint=""
                     android:inputType="numberDecimal"
                     android:text=""
+
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
                     android:textSize="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -212,6 +201,8 @@
                     android:layout_height="0dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:background="@color/white"
+                    android:fontFamily="@font/robotoregular"
                     android:gravity="center"
                     android:text="VND"
                     android:textAlignment="center"
@@ -223,54 +214,44 @@
             <LinearLayout
                 android:id="@+id/linearlayout3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_120sdp"
+                android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginRight="@dimen/_15sdp"
+                android:gravity="center"
                 android:orientation="vertical">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnConvert"
-                    android:layout_width="@dimen/_100sdp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/my_button"
+                    android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:text="Convert"
+                    android:text="CHUYỂN ĐỔI"
                     android:textAlignment="center"
                     android:textColor="@color/white">
 
-                </Button>
+                </androidx.appcompat.widget.AppCompatButton>
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnHistory"
-                    android:layout_width="@dimen/_100sdp"
+                    android:layout_width="@dimen/_150sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    android:background="@drawable/my_button"
+                    android:fontFamily="@font/robotoregular"
                     android:gravity="center"
-                    android:text="History"
+                    android:text="LỊCH SỬ"
                     android:textAlignment="center"
                     android:textColor="@color/white">
 
-                </Button>
+                </androidx.appcompat.widget.AppCompatButton>
             </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_16sdp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:background="#282828">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif"
-                android:text="Wednesday, 9 Octobor 2019 00:27"
-                android:textAlignment="center"
-                android:textColor="#C6C6C6" />
-        </LinearLayout>
-
     </RelativeLayout>
 </ScrollView>

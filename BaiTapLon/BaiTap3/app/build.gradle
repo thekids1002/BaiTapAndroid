@@ -28,6 +28,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.burakustun:lottieprogressdialog:1.0.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'info.androidhive:fontawesome:0.0.5'
     implementation 'com.intuit.sdp:sdp-android:1.0.6'

@@ -34,7 +34,6 @@ public class HistoryAdapter extends ArrayAdapter<HistoryCurrency> {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_listview, parent, false);
         }
-
         TextView stt = convertView.findViewById(R.id.ls_stt);
         TextView spn_from = convertView.findViewById(R.id.ls_spn_from);
         TextView spn_to = convertView.findViewById(R.id.ls_spn_to);
@@ -46,7 +45,6 @@ public class HistoryAdapter extends ArrayAdapter<HistoryCurrency> {
         spn_to.setText(his.getSpn_to());
         value_from.setText(his.getValue_from());
         value_to.setText(his.getValue_to());
-
         return convertView;
     }
 }

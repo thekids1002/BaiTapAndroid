@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.baitap4">
+    package="com.baitapnhom.baitap4">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,13 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Baitap4">
         <activity
-            android:name=".ConfirmImageActivity"
+            android:name="com.baitapnhom.baitap4.DeleteActivity"
             android:exported="true" />
         <activity
-            android:name=".ImageDisplayActivity"
+            android:name="com.baitapnhom.baitap4.ConfirmImageActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.baitapnhom.baitap4.ImageDisplayActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.baitapnhom.baitap4.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +36,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.android.fileprovider"
+            android:authorities="com.baitapnhom.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -41,7 +44,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <receiver android:name="Utils.ReminderBroadCast"></receiver>
+        <receiver android:name="Utils.ReminderBroadCast" />
     </application>
 
 </manifest>

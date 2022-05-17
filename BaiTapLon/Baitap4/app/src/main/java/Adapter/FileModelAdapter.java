@@ -1,7 +1,6 @@
 package Adapter;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.baitap4.R;
+import com.baitapnhom.baitap4.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -26,7 +25,6 @@ public class FileModelAdapter extends ArrayAdapter<FileModel> {
     @NonNull List<FileModel> objects;
 
     public FileModelAdapter(@NonNull Context context, int resource, @NonNull List<FileModel> objects) {
-
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
@@ -44,11 +42,9 @@ public class FileModelAdapter extends ArrayAdapter<FileModel> {
 
         FileModel fileModel = this.objects.get(position);
         Picasso.get().load(new File(fileModel.getFilepath()))
-                     .resize(75, 75)
+                     .resize(100 , 150)
                      .centerCrop().into(imageView);
-//        imageView.setImageBitmap(BitmapFactory.decodeFile( fileModel.getFilepath()));
         fileName.setText(fileModel.getFilename());
-
         return convertView;
     }
 }

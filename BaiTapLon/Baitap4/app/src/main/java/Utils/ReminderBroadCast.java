@@ -8,8 +8,8 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.baitap4.MainActivity;
-import com.example.baitap4.R;
+import com.baitapnhom.baitap4.MainActivity;
+import com.baitapnhom.baitap4.R;
 
 public class ReminderBroadCast extends BroadcastReceiver {
     public static final String CHANNEL_ID = "notifyAppSelfy";

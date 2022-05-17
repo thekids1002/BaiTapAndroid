@@ -1,63 +1,53 @@
 package com.baitapnhom.baitap3;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
+import Adapter.CustomSpinnerAdapter;
 import Model.Currency;
 import Model.HistoryCurrency;
+import Utils.CustomProgressDialog;
+import Utils.MyConfig;
 import Utils.MyDatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
-    DecimalFormat sdf = new DecimalFormat("###,###.###");
+    DecimalFormat sdf = new DecimalFormat("###.###");
     EditText txtCurrencyFrom, txtCurrencyTo;
-    ImageView ImageCountryFrom, ImageCountryTo;
     Spinner spn_from, spn_to;
     TextView CurrencyCodeFrom, CurrencyCodeTo, txtcurrency;
     ImageButton btnChangeCurrent, btnChangeCurrent2;
-    private Currency currency1, currency2;
-    Button btnConver , btnHistory;
-    public static ArrayList<Currency> currencies = new ArrayList<Currency>();
-    public static ArrayList<String> currStrings = new ArrayList<String>();
-    private ProgressDialog dialog;
+    Currency currency1, currency2;
+    Button btnConver, btnHistory;
+    CustomSpinnerAdapter adapter;
+    ArrayList<Currency> currencyArrayList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addControl();
         addEvent();
-
     }
 
     private void addEvent() {
@@ -65,14 +55,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    if (currencies.isEmpty()) {
-                        return;
-                    }
-                    String url = "http://img.geonames.org/flags/x/" + currencies.get(i).getCountryCode().toLowerCase() + ".gif";
-                    Picasso.get().load(url).into(ImageCountryFrom);
-                    CurrencyCodeFrom.setText(currencies.get(i).getCurrencyCode());
-                    currency1 = new Currency();
-                    currency1 = currencies.get(i);
+                    CurrencyCodeFrom.setText(currencyArrayList.get(i).getCurrencyCode());
+                    currency1 = currencyArrayList.get(i);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -87,76 +72,47 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    if (currencies.isEmpty()) {
-                        return;
-                    }
-                    String url = "http://img.geonames.org/flags/x/" + currencies.get(i).getCountryCode().toLowerCase() + ".gif";
-                    Picasso.get().load(url).into(ImageCountryTo);
-                    CurrencyCodeTo.setText(currencies.get(i).getCurrencyCode());
-                    currency2 = new Currency();
-                    currency2 = currencies.get(i);
+                    CurrencyCodeTo.setText(currencyArrayList.get(i).getCurrencyCode());
+                    currency2 = currencyArrayList.get(i);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
 
-        btnChangeCurrent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int index1 = 0;
-                int index2 = 0;
-                try {
-                     index1 = spn_from.getSelectedItemPosition();
-                     index2 = spn_to.getSelectedItemPosition();
-                     spn_from.setSelection(index2);
-                     spn_to.setSelection(index1);
-                }
-                catch (Exception e ){
-                    e.printStackTrace();
-                }
-            }
+        btnChangeCurrent.setOnClickListener(view -> {
+            int index1 = spn_from.getSelectedItemPosition();
+            int index2 = spn_to.getSelectedItemPosition();
+            spn_from.setSelection(index2);
+            spn_to.setSelection(index1);
         });
 
-        btnConver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ConverterAsynctask converter = new ConverterAsynctask();
-                converter.execute();
-            }
+        btnConver.setOnClickListener(view -> {
+            ConverterAsynctask converter = new ConverterAsynctask();
+            converter.execute();
         });
 
-        btnHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, history_activity.class);
-                startActivity(intent);
-            }
+        btnHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, History_Activity.class);
+            startActivity(intent);
         });
     }
 
-    ArrayAdapter<String> adapter;
 
     private void addControl() {
         CurrencyAsyntask currencyAsyntask = new CurrencyAsyntask();
         currencyAsyntask.execute();
-       // Converter converter = new Converter();
-      //  converter.execute();
         txtCurrencyTo = findViewById(R.id.txtCurrencyTo);
         txtCurrencyFrom = findViewById(R.id.txtCurrencyFrom);
-        ImageCountryFrom = findViewById(R.id.ImageCountryFrom);
-        ImageCountryTo = findViewById(R.id.ImageCountryTo);
         spn_from = findViewById(R.id.spn_from);
         spn_to = findViewById(R.id.spn_to);
         btnChangeCurrent = findViewById(R.id.btnChangeCurrent);
         btnChangeCurrent2 = findViewById(R.id.btnChangeCurrent2);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, currStrings);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter = new CustomSpinnerAdapter(getApplicationContext(), currencyArrayList);
         spn_from.setAdapter(adapter);
         spn_to.setAdapter(adapter);
         txtcurrency = findViewById(R.id.currency);
@@ -164,29 +120,60 @@ public class MainActivity extends AppCompatActivity {
         CurrencyCodeTo = findViewById(R.id.CurrencyCodeTo);
         btnConver = findViewById(R.id.btnConvert);
         btnHistory = findViewById(R.id.btnHistory);
+    }
 
+    private void saveHistory(HistoryCurrency his) {
+        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(this);
+        databaseHelper.addCurrency(his);
     }
 
     class ConverterAsynctask extends AsyncTask<String, Void, String> {
+        CustomProgressDialog progressDialog = new CustomProgressDialog(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-    public ConverterAsynctask(){
-        dialog = new ProgressDialog(MainActivity.this);
-    }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog.setMessage("Đang tải dữ liệu vui lòng chờ");
-            dialog.show();
+            try {
+                progressDialog.show();
+                if (txtCurrencyFrom.getText().toString().isEmpty()) {
+                    txtCurrencyTo.setText("");
+                    progressDialog.dismiss();
+                    builder.setTitle("Không được để trống").setMessage("Bạn vui lòng nhập giá trị cần đổi !!!");
+                    builder.setCancelable(true);
+                    builder.show();
+                }
+                if (currency1 == null || currency2 == null) {
+                    progressDialog.dismiss();
+                    builder.setTitle("Quốc gia không được để trống").setMessage("Bạn vui lòng chọn quốc gia cần đổi !!!");
+                    builder.setCancelable(true);
+                    builder.show();
+                }
+                if (currency1.getCurrencyCode().equals(currency2.getCurrencyCode())) {
+                    progressDialog.dismiss();
+                    String txtValue = txtCurrencyFrom.getText().toString();
+                    txtCurrencyTo.setText(txtValue);
+                    HistoryCurrency his = new HistoryCurrency();
+                    his.setSpn_from(currency1.getCurrencyCode());
+                    his.setSpn_to(currency2.getCurrencyCode());
+                    his.setValue_from(sdf.format(Float.parseFloat(txtValue)));
+                    his.setValue_to(txtValue);
+                    saveHistory(his);
+                }
+            }
+            catch (Exception e){
+                progressDialog.dismiss();
+            }
         }
-
         @Override
         protected String doInBackground(String... strings) {
-
             StringBuilder content = new StringBuilder();
             try {
+                currency1 = currencyArrayList.get(spn_from.getSelectedItemPosition());
+                currency2 = currencyArrayList.get(spn_to.getSelectedItemPosition());
                 String currency_name_1 = currency1.getCurrencyCode();
                 String currency_name_2 = currency2.getCurrencyCode();
-                String URL = "https://"+currency_name_1+".fxexchangerate.com/"+currency_name_2+".xml";
+                String URL = MyConfig.getAPIConverter(currency_name_1,currency_name_2);
                 URL url = new URL(URL.toLowerCase());
                 InputStreamReader inputStreamReader = new InputStreamReader(url.openConnection().getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -195,9 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     content.append(line);
                 }
                 bufferedReader.close();
-
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return content.toString();
@@ -206,104 +191,83 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             try {
-
-                if(txtCurrencyFrom.getText().toString().isEmpty() || txtCurrencyFrom.getText().toString() == ""){
-                    txtCurrencyTo.setText("");
-                    dialog.dismiss();
-                    return;
-                }
-                if(currency1 == null || currency2 == null){
-                    dialog.dismiss();
-                    return;
-                }
                 XMLDOMParser parser = new XMLDOMParser();
                 Document document = parser.getDocument(s);
                 NodeList nodeList = document.getElementsByTagName("item");
-                String tygia = "";
-                for (int i = 0; i < 1; i++) {
+                String result = "";
+                for (int i = 0; i < nodeList.getLength(); i++) {
                     Element element = (Element) nodeList.item(i);
                     NodeList DescriptionNode = element.getElementsByTagName("description");
                     Element DescriptionEle = (Element) DescriptionNode.item(i);
-                    tygia = Html.fromHtml(DescriptionEle.getFirstChild().getNodeValue().trim()).toString();
-                    Log.e("tygia", tygia);
+                    result = Html.fromHtml(DescriptionEle.getFirstChild().getNodeValue().trim()).toString();
+                    result = result.replaceAll(currency1.getCurrencyCode(),"");
+                    result = result.replaceAll(currency2.getCurrencyCode(),"");
                 }
-                String[] arr = tygia.split("\n");
+                String[] arr = result.split("\n");
                 String currency = arr[0];
                 txtcurrency.setText(currency);
-                currency= currency.replace(currency1.getCurrencyCode(),"");
-                currency = currency.replace(currency2.getCurrencyCode(),"");
-                // tách ra 2 giá trị
                 String[] arrcurency = currency.split("=");
-                Float a = Float.parseFloat(arrcurency[0].trim());
-                Float value = Float.parseFloat(txtCurrencyFrom.getText().toString().trim());
-                Float b = Float.parseFloat(arrcurency[1].trim());
-                Float c = value * b ;
-                txtCurrencyTo.setText(sdf.format(c));
+                Double input = Double.parseDouble(txtCurrencyFrom.getText().toString().trim());
+                Double rate = Double.parseDouble(arrcurency[1].trim());
+                Double output =  (input * rate);
+                if( rate < 1){
+                    currency = arr[1];
+                    arrcurency = currency.split("=");
+                    rate = Double.parseDouble(arrcurency[1].trim());
+                    output =  (input / rate) ;
+                }
+                txtCurrencyTo.setText(output + "");
                 HistoryCurrency his = new HistoryCurrency();
                 his.setSpn_from(currency1.getCurrencyCode());
                 his.setSpn_to(currency2.getCurrencyCode());
-                his.setValue_from(sdf.format(value));
-                his.setValue_to(sdf.format(c));
-                saveHistory(his);
-                super.onPostExecute(s);
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
+                his.setValue_from(sdf.format(input));
+                his.setValue_to(sdf.format(Math.round(output)));
+                if(!String.valueOf(output).isEmpty()){
+                    saveHistory(his);
                 }
-            }
-            catch (Exception e){
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Có lỗi xảy ra").setMessage("Vui lòng chọn lại quốc gia");
-                builder.setCancelable(true);
-
-
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
             }
         }
     }
 
-    private void saveHistory(HistoryCurrency his) {
-        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(this);
-        databaseHelper.addCurrency(his);
-    }
-
-    class CurrencyAsyntask extends AsyncTask<Void, Void, ArrayList<Model.Currency>> {
-        public CurrencyAsyntask(){
-            dialog = new ProgressDialog(MainActivity.this);
-        }
+    class CurrencyAsyntask extends AsyncTask<Void, Void, ArrayList<Currency>> {
+        private CustomProgressDialog progressDialog = new CustomProgressDialog(MainActivity.this);
         @Override
-        protected void onPostExecute(ArrayList<Model.Currency> currencie) {
+        protected void onPostExecute(ArrayList<Currency> currencie) {
             super.onPostExecute(currencie);
-            currencies.clear();
-            currencies.addAll(currencie);
-            for (Currency currency : currencies
-            ) {
-                currStrings.add(currency.getCurrencyCode());
-                System.out.println(currency.getCurrencyCode());
-            }
-            adapter.notifyDataSetChanged();
-            spn_from.setSelection(0);
-            spn_to.setSelection(0);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+           try {
+               currencyArrayList.clear();
+               currencyArrayList.addAll(currencie);
+               adapter.notifyDataSetChanged();
+               spn_from.setSelection(0);
+               spn_to.setSelection(0);
+               if (progressDialog.isShowing()) {
+                   progressDialog.dismiss();
+               }
+           }
+           catch (Exception e){
+                e.printStackTrace();
+           }
         }
 
         @Override
         protected void onPreExecute() {
-            currStrings.clear();
-            super.onPreExecute();
-
-            dialog.setMessage("Đang tải dữ liệu vui lòng chờ");
-            dialog.show();
+            currencyArrayList.clear();
+            progressDialog.show();
         }
 
         @Override
-        protected ArrayList<Model.Currency> doInBackground(Void... voids) {
-            ArrayList<Model.Currency> currencies = new ArrayList<Model.Currency>();
+        protected ArrayList<Currency> doInBackground(Void... voids) {
+            ArrayList<Currency> currenciesList = new ArrayList<>();
             try {
-                URL url = new URL("http://api.geonames.org/countryInfoJSON?username=btandroid2");
+                URL url = new URL(MyConfig.GEOSNAME_API);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -324,9 +288,12 @@ public class MainActivity extends AppCompatActivity {
                     if (jsonObject.has("countryCode")) {
                         currency.setCountryCode(jsonObject.getString("countryCode"));
                     }
-                    currencies.add(currency);
+                    if (jsonObject.has("countryName")) {
+                        currency.setCountryName(jsonObject.getString("countryName"));
+                    }
+                    currenciesList.add(currency);
                 }
-                return currencies;
+                return currenciesList;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

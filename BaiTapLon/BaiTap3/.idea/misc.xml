@@ -5,14 +5,20 @@
       <map>
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/border.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/border_shadow.xml" value="0.19635416666666666" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/custom_button_spinnet.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/ic_baseline_arrow_forward_24.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/my_button.xml" value="0.19635416666666666" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/my_edit_text_border.xml" value="0.2703125" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/my_spinner_border.xml" value="0.19635416666666666" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/drawable/progress_animation.xml" value="0.2703125" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/activity_history.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/custom_listview.xml" value="0.264" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/custom_listview.xml" value="0.4" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/custom_progress_dialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/custom_spinner_items.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/layout/layout_border.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/BaiTap3/app/src/main/res/xml/network_security_config.xml" value="0.16875" />
       </map>

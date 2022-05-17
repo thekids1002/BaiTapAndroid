@@ -1,8 +1,7 @@
-package com.example.baitap4;
+package com.baitapnhom.baitap4;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 

@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.BaiTap3">
         <activity
-            android:name=".history_activity"
+            android:name=".History_Activity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

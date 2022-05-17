@@ -1,4 +1,4 @@
-package com.example.baitap4;
+package com.baitapnhom.baitap4;
 
 import org.junit.Test;
 

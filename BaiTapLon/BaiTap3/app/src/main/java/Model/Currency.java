@@ -1,27 +1,24 @@
 package Model;
 
-import java.util.ArrayList;
-
 public class Currency {
-    public static ArrayList<Currency> currencies;
+
 
     public Currency() {
-        currencies = new ArrayList<Currency>();
     }
 
     private String countryCode;
 
     private String currencyCode;
 
-    private String CurrencyVal;
-
-    public static ArrayList<Currency> getCurrencies() {
-        return currencies;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public static void setCurrencies(ArrayList<Currency> currencies) {
-        Currency.currencies = currencies;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
+
+    private String countryName;
 
     public String getCountryCode() {
         return countryCode;
@@ -39,11 +36,8 @@ public class Currency {
         this.currencyCode = currencyCode;
     }
 
-    public String getCurrencyVal() {
-        return CurrencyVal;
-    }
-
-    public void setCurrencyVal(String currencyVal) {
-        CurrencyVal = currencyVal;
+    @Override
+    public String toString() {
+        return countryName +" - "+ currencyCode;
     }
 }

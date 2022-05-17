@@ -5,15 +5,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
     <LinearLayout
+        android:padding="@dimen/_5sdp"
+
         android:layout_width="match_parent"
         android:layout_height="@dimen/_62sdp"
-
-        android:background="#DFEFCC"
+        android:background="#F4F4F4"
         android:orientation="horizontal">
        <androidx.cardview.widget.CardView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           app:cardBackgroundColor="#555657"
+           app:cardBackgroundColor="#F4F4F4"
            app:cardCornerRadius="@dimen/_6sdp"
            >
            <ImageView
@@ -31,7 +32,7 @@
             android:layout_height="match_parent"
             android:text="Viet Nam"
             android:textStyle="bold"
-            android:background="#DFEFCC"
+            android:background="#F4F4F4"
             android:textSize="@dimen/_20sdp"
             android:textColor="@color/black"
             android:id="@+id/countryName"

@@ -44,12 +44,12 @@ public class InfoCountryActivity extends AppCompatActivity {
 
     public void addEvent() {
         Intent intent = getIntent();
-        country = new Country();
         String getCountry_name = intent.getStringExtra("getCountry_name");
         String getPopulation = intent.getStringExtra("getPopulation");
         String getAreaInSqKm = intent.getStringExtra("getAreaInSqKm");
         String getCapital = intent.getStringExtra("getCapital");
         String getCountryMap = intent.getStringExtra("getCountryMap");
+        country = new Country();
         country.setCountryMap(getCountryMap);
         country.setCapital(getCapital);
         country.setPopulation(getPopulation);
