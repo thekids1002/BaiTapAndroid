@@ -1,5 +1,4 @@
 package com.example.baitap2;
-
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,9 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.squareup.picasso.Picasso;
+
 import java.text.DecimalFormat;
 
 import Model.Country;
@@ -42,57 +40,13 @@ public class InfoCountryActivity extends AppCompatActivity {
 
     public void addEvent() {
         country = (Country) getIntent().getSerializableExtra("CountryInfo");
-        getMapCountryTask getMapCountryTask = new getMapCountryTask();
-        getMapCountryTask.execute();
+        population.setText(sdf.format(Double.parseDouble(country.getPopulation())));
+        areaInSqKm.setText(sdf.format(Double.parseDouble(country.getAreaInSqKm())));
+        capital.setText(country.getCapital());
+        final String MAPURL = "http://img.geonames.org/img/country/250/" + country.getCountryMap().toUpperCase() + ".png";
+        Picasso.get().load(MAPURL).placeholder(R.drawable.progress_animation).into(countryMap);
     }
 
-    class getMapCountryTask extends AsyncTask<Void, Void, Bitmap> {
-        private ProgressDialog dialog;
-
-        public getMapCountryTask() {
-            dialog = new ProgressDialog(InfoCountryActivity.this);
-        }
-
-
-        @Override
-        protected Bitmap doInBackground(Void... voids) {
-            try {
-                final String MAPURL = "http://img.geonames.org/img/country/250/" + country.getCountryMap().toUpperCase() + ".png";
-                Log.e("Err", "doInBackground: " + MAPURL);
-                URL url = new URL(MAPURL);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream inputStream = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-                return bitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            dialog.setMessage("Đang tải dữ liệu vui lòng chờ");
-            dialog.show();
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            population.setText(sdf.format(Double.parseDouble(country.getPopulation())));
-            areaInSqKm.setText(sdf.format(Double.parseDouble(country.getAreaInSqKm())));
-            capital.setText(country.getCapital());
-            countryMap.setImageBitmap(bitmap);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-    }
+    
 
 }
