@@ -59,6 +59,8 @@ public class InfoCountryActivity extends AppCompatActivity {
         country.setAreaInSqKm(getAreaInSqKm);
         country.setCountry_name(getCountry_name);
         Picasso.get().load(country.getCountryMap()).into(countryMap);
+
+
 //        getMapCountryTask getMapCountryTask = new getMapCountryTask();
 //        getMapCountryTask.execute();
     }
