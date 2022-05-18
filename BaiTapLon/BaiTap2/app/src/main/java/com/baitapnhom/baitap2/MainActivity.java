@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private SearchView searchView;
     private boolean isFilter;
+    ArrayList<Country> countriesTemp = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void addEvents() {
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
-            Country country = lazy_load_countries.get(i);
+            Country country;
+            if(isFilter){
+                country = countriesTemp.get(i);
+            }
+            else{
+                country = lazy_load_countries.get(i);
+            }
             Intent intent = new Intent(MainActivity.this, InfoCountryActivity.class);
             intent.putExtra("getCountry_name", country.getCountry_name());
             intent.putExtra("getCountryMap", country.getCountryMap());
@@ -68,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("getPopulation", country.getPopulation());
             startActivity(intent);
         });
+
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -86,11 +97,8 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             }
                             Country country = countries.get(i);
-                            System.out.println("Cái gì đấy " + i + country.getCountry_name());
                             lazy_load_countries.add(country);
-                            for (Country country1 : lazy_load_countries) {
-                                System.out.println("LazyLoad" + country1.getCountry_name());
-                            }
+
                         }
                         countryAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
@@ -111,35 +119,34 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                if(TextUtils.isEmpty(newText) || newText.length() == 0 || newText.equals("")){
-//                    isSearch = false;
-//                    for (Country country : lazy_load_countries){
-//                        Log.e("Tag",country.getCountry_name());
-//                    }
-//                    countryAdapter = new CountryAdapter(MainActivity.this,R.layout.listview_custom,lazy_load_countries);
-//                    listView.setAdapter(countryAdapter);
-//                }
-//                else{
-//                    isSearch = true;
-//                    countryAdapter.clear();
-//                    for (int i = 0 ; i < countries.size() ; i++){
-//                        if(countries.get(i).getCountry_name().toLowerCase().contains(newText.toLowerCase())){
-//                            countryAdapter.add(countries.get(i));
-//                        }
-//                    }
-//
-//                    //
-//                }
-//                countryAdapter.notifyDataSetChanged();
-                if (newText.isEmpty()) {
-                    listView.clearTextFilter();
+                if(TextUtils.isEmpty(newText) || newText.length() == 0 || newText.equals("")){
                     isFilter = false;
-                    return false;
-                } else {
-                    isFilter = true;
-                    countryAdapter.getFilter().filter(newText);
-                    return false;
+                    countryAdapter = new CountryAdapter(MainActivity.this,lazy_load_countries);
+                    listView.setAdapter(countryAdapter);
                 }
+                else{
+                    isFilter = true;
+                    countriesTemp.clear();
+                    for (int i = 0 ; i < countries.size() ; i++){
+                        if(countries.get(i).getCountry_name().toLowerCase().contains(newText.toLowerCase())){
+                            countriesTemp.add(countries.get(i));
+                        }
+                    }
+                    countryAdapter = new CountryAdapter(MainActivity.this, countriesTemp);
+                    listView.setAdapter(countryAdapter);
+                    //
+                }
+                countryAdapter.notifyDataSetChanged();
+                return false;
+//                if (newText.isEmpty()) {
+//                    listView.clearTextFilter();
+//                    isFilter = false;
+//                    return false;
+//                } else {
+//                    isFilter = true;
+//                    countryAdapter.getFilter().filter(newText);
+//                    return false;
+//                }
 
 
             }
@@ -221,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             if (lottie.isShowing()) {
                 lottie.dismiss();
             }
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 7; i++) {
                 Country countrySelected = countries.get(i);
                 Log.e("TAGGGGGGGGGGGGG", countrySelected.toString());
                 lazy_load_countries.add(countrySelected);
