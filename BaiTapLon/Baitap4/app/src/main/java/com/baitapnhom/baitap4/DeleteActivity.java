@@ -2,6 +2,7 @@ package com.baitapnhom.baitap4;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -51,14 +52,22 @@ public class DeleteActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int index = info.position;
+        String filePath = fileModel.get(index).getFilepath();
         switch (item.getItemId()) {
             case R.id.menu_ct_view_deleted_activity:
                 showImage(index);
                 return true;
             case R.id.menu_ct_deleted_activity:
-                String filePath = fileModel.get(index).getFilepath();
+
                 if(deleteFile(filePath)){
                     Toast.makeText(DeleteActivity.this, "Đã xoá vĩnh viễn", Toast.LENGTH_SHORT).show();
+                }
+                getFileInDir();
+                fileModelAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.menu_ct_restore_activity:
+                if(moveFile(filePath)){
+                    Toast.makeText(DeleteActivity.this, "Đã khôi phục thành công", Toast.LENGTH_SHORT).show();
                 }
                 getFileInDir();
                 fileModelAdapter.notifyDataSetChanged();
@@ -75,6 +84,25 @@ public class DeleteActivity extends AppCompatActivity {
                 return f.delete();
             }
         } catch (Exception e) {
+        }
+        return false;
+    }
+    public boolean moveFile(String currentPath) {
+        try {
+            String deleted_path = Environment.getExternalStorageDirectory().toString() +
+                    "/Android/data/com.example.baitap4/files/Pictures";
+            File directory = new File(deleted_path);
+            File f = new File(currentPath);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            if (f.exists()) {
+                f.renameTo(new File(deleted_path + "/" + f.getName()));
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -123,6 +151,11 @@ public class DeleteActivity extends AppCompatActivity {
         if (files != null) {
             fileModelAdapter.notifyDataSetChanged();
         }
+    }
+    @Override
+    public void onBackPressed() {
+        setResult(Activity.RESULT_CANCELED);
+        super.onBackPressed();
     }
 
 }

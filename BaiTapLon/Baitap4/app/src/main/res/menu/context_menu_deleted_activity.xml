@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_ct_view_deleted_activity" android:title="View"></item>
-    <item android:id="@+id/menu_ct_deleted_activity" android:title="Delete"></item>
+    <item android:id="@+id/menu_ct_view_deleted_activity" android:title="Xem"></item>
+    <item android:id="@+id/menu_ct_deleted_activity" android:title="Xoá"></item>
+    <item android:id="@+id/menu_ct_restore_activity" android:title="Khôi phục"></item>
 </menu>

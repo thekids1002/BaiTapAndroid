@@ -1,19 +1,23 @@
 package com.baitapnhom.baitap2;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         addEvents();
 
     }
-
-
     private void addControl() {
         listView = findViewById(R.id.lvquocgia);
         countryAdapter = new CountryAdapter(MainActivity.this, lazy_load_countries);
@@ -138,17 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 countryAdapter.notifyDataSetChanged();
                 return false;
-                //------------------------------------------------------
-//                if (TextUtils.isEmpty(newText) || newText.length() == 0 || newText.equals("")) {
-//                    listView.clearTextFilter();
-//                    isFilter = false;
-//                } else {
-//                    isFilter = true;
-//                    countryAdapter.getFilter().filter(newText);
-//                }
-//                return false;
-
-
             }
         });
     }

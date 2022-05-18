@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openDeletedView() {
         Intent intent = new Intent(MainActivity.this, DeleteActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,104);
     }
 
     // ask permisson
@@ -278,6 +278,10 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
+        }
+        if(resultCode == Activity.RESULT_CANCELED){
+            getFileInDir();
+            fileModelAdapter.notifyDataSetChanged();
         }
     }
 
