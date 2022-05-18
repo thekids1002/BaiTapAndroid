@@ -13,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -32,15 +35,16 @@ import Utils.MyConfig;
 import Utils.MyDatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
-    DecimalFormat sdf = new DecimalFormat("###.###");
+    DecimalFormat sdf = new DecimalFormat("###,###,###.###");
     EditText txtCurrencyFrom, txtCurrencyTo;
-    Spinner spn_from, spn_to;
+  //  Spinner spn_from, spn_to;
     TextView CurrencyCodeFrom, CurrencyCodeTo, txtcurrency;
     ImageButton btnChangeCurrent, btnChangeCurrent2;
     Currency currency1, currency2;
     Button btnConver, btnHistory;
     CustomSpinnerAdapter adapter;
     ArrayList<Currency> currencyArrayList = new ArrayList<>();
+    SearchableSpinner spn_from,spn_to;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
+                    currency1 = (Currency) adapterView.getSelectedItem();
                     CurrencyCodeFrom.setText(currencyArrayList.get(i).getCurrencyCode());
-                    currency1 = currencyArrayList.get(i);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -72,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
+                    currency2 = (Currency) adapterView.getSelectedItem();
                     CurrencyCodeTo.setText(currencyArrayList.get(i).getCurrencyCode());
-                    currency2 = currencyArrayList.get(i);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -112,9 +117,13 @@ public class MainActivity extends AppCompatActivity {
         spn_to = findViewById(R.id.spn_to);
         btnChangeCurrent = findViewById(R.id.btnChangeCurrent);
         btnChangeCurrent2 = findViewById(R.id.btnChangeCurrent2);
-        adapter = new CustomSpinnerAdapter(getApplicationContext(), currencyArrayList);
+        adapter = new CustomSpinnerAdapter(MainActivity.this, R.layout.custom_spinner_items, currencyArrayList);
         spn_from.setAdapter(adapter);
         spn_to.setAdapter(adapter);
+        spn_from.setTitle("Chọn quốc gia");
+        spn_to.setTitle("Chọn quốc gia");
+        spn_from.setPositiveButton("OK");
+        spn_to.setPositiveButton("OK");
         txtcurrency = findViewById(R.id.currency);
         CurrencyCodeFrom = findViewById(R.id.CurrencyCodeFrom);
         CurrencyCodeTo = findViewById(R.id.CurrencyCodeTo);
@@ -216,12 +225,12 @@ public class MainActivity extends AppCompatActivity {
                     rate = Double.parseDouble(arrcurency[1].trim());
                     output =  (input / rate) ;
                 }
-                txtCurrencyTo.setText(output + "");
+                txtCurrencyTo.setText(sdf.format(output));
                 HistoryCurrency his = new HistoryCurrency();
                 his.setSpn_from(currency1.getCurrencyCode());
                 his.setSpn_to(currency2.getCurrencyCode());
                 his.setValue_from(sdf.format(input));
-                his.setValue_to(sdf.format(Math.round(output)));
+                his.setValue_to(sdf.format(output));
                 if(!String.valueOf(output).isEmpty()){
                     saveHistory(his);
                 }
@@ -229,6 +238,9 @@ public class MainActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
             } catch (Exception e) {
+                builder.setTitle("Có lỗi xảy ra").setMessage("Bạn vui lòng chọn quốc gia cần đổi !!!");
+                builder.setCancelable(true);
+                builder.show();
                 e.printStackTrace();
                 if (progressDialog.isShowing()) {
                     progressDialog.dismiss();

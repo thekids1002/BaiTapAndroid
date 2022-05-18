@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
                 progChange[0] = i;
 
-                //Make incremental color value changes
-
                 redArray[0] = redArray[0] - (255 / 100) * progChange[0];
                 redArray[1] = redArray[1] + (229 / 100) * progChange[0];
                 redArray[2] = redArray[2] + (238 / 100) * progChange[0];
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 yellowArray[0] = yellowArray[0] - (125 / 100) * progChange[0];
                 yellowArray[1] = yellowArray[1] - (255 / 100) * progChange[0];
                 yellowArray[2] = yellowArray[2] + (130 / 100) * progChange[0];
-
-                //Set the boxes to new colors
 
                 redbox1.setBackgroundColor(Color.rgb(redArray[0], redArray[1], redArray[2]));
                 redbox2.setBackgroundColor(Color.rgb(redArray[0], redArray[1], redArray[2]));

@@ -1,12 +1,10 @@
 package Adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,22 +19,27 @@ import java.util.List;
 import Model.Currency;
 import Utils.MyConfig;
 
-public class CustomSpinnerAdapter extends BaseAdapter{
-    Context context;
-    List<Currency> currencies;
-    public CustomSpinnerAdapter(Context context, List<Currency> currencies) {
+public class CustomSpinnerAdapter extends ArrayAdapter<Currency> {
+    @NonNull Context context;
+    int resource;
+    @NonNull List<Currency> objects;
+
+    public CustomSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Currency> objects) {
+        super(context, resource, objects);
         this.context = context;
-        this.currencies = currencies;
+        this.resource = resource;
+        this.objects = objects;
     }
+
 
     @Override
     public int getCount() {
-        return currencies != null ? currencies.size() : 0;
+        return objects != null ? objects.size() : 0;
     }
 
     @Override
-    public Object getItem(int i) {
-        return i;
+    public Currency getItem(int i) {
+        return objects.get(i);
     }
 
     @Override
@@ -44,14 +47,31 @@ public class CustomSpinnerAdapter extends BaseAdapter{
         return i;
     }
 
+
+    @NonNull
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.custom_spinner_items,viewGroup,false);
-        ImageView imageView = rootView.findViewById(R.id.spn_image_custom);
-        TextView textView = rootView.findViewById(R.id.spn_text_custom);
-        textView.setText(currencies.get(i).getCountryName());
-        String url = MyConfig.getImageLink(currencies.get(i).getCountryCode());
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        if(convertView == null){
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_spinner_items,parent,false);
+        }
+        ImageView imageView = convertView.findViewById(R.id.spn_image_custom);
+        TextView textView = convertView.findViewById(R.id.spn_text_custom);
+        textView.setText(objects.get(position).getCountryName());
+        String url = MyConfig.getImageLink(objects.get(position).getCountryCode());
         Picasso.get().load(url).centerCrop().resize(75,50).into(imageView);
-        return rootView;
+        return convertView;
+    }
+
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        if(convertView == null){
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_spinner_items,parent,false);
+        }
+        ImageView imageView = convertView.findViewById(R.id.spn_image_custom);
+        TextView textView = convertView.findViewById(R.id.spn_text_custom);
+        textView.setText(objects.get(position).getCountryName());
+        String url = MyConfig.getImageLink(objects.get(position).getCountryCode());
+        Picasso.get().load(url).centerCrop().resize(75,50).into(imageView);
+        return convertView;
     }
 }
