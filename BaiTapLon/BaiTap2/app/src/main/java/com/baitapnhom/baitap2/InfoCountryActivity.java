@@ -50,13 +50,11 @@ public class InfoCountryActivity extends AppCompatActivity {
         String getAreaInSqKm = intent.getStringExtra("getAreaInSqKm");
         String getCapital = intent.getStringExtra("getCapital");
         String getCountryMap = intent.getStringExtra("getCountryMap");
-        country = new Country();
-        country.setCountryMap(getCountryMap);
-        country.setCapital(getCapital);
-        country.setPopulation(getPopulation);
-        country.setAreaInSqKm(getAreaInSqKm);
-        country.setCountry_name(getCountry_name);
-        Picasso.get().load(country.getCountryMap()).into(countryMap);
+        population.setText(getPopulation + " người");
+        areaInSqKm.setText(getAreaInSqKm + " km²");
+        capital.setText(getCapital);
+        MapName.setText(getCountry_name);
+        Picasso.get().load(getCountryMap).placeholder(R.drawable.progress_animation).into(countryMap);
 
 
 //        getMapCountryTask getMapCountryTask = new getMapCountryTask();

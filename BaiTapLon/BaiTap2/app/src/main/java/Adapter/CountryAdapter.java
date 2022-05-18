@@ -1,15 +1,10 @@
 package Adapter;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,24 +15,22 @@ import com.baitapnhom.baitap2.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Model.Country;
-import Util.BitmapManager;
 
-public class CountryAdapter extends BaseAdapter {
+public class CountryAdapter extends BaseAdapter{
     @NonNull
     Context context;
     int resource;
     @NonNull
-    //  CustomFilter cs;
+    //CustomFilter cs;
     ArrayList<Country> originalArray,temp;
 
 
     public CountryAdapter(@NonNull Context context,  ArrayList<Country> originalArray) {
         this.context = context;
         this.originalArray = originalArray;
-       // this.temp =  this.originalArray;
+        this.temp =  this.originalArray;
 
     }
 

@@ -63,13 +63,13 @@ public class MainActivity extends AppCompatActivity {
     private void addEvents() {
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             Country country;
-            if(isFilter){
-                country = countriesTemp.get(i);
-            }
-            else{
-                country = lazy_load_countries.get(i);
-            }
-         //   country = (Country) adapterView.getAdapter().getItem(i);
+//            if(isFilter){
+//                country = countriesTemp.get(i);
+//            }
+//            else{
+//                country = lazy_load_countries.get(i);
+//            }
+            country = (Country) adapterView.getAdapter().getItem(i);
             Intent intent = new Intent(MainActivity.this, InfoCountryActivity.class);
             intent.putExtra("getCountry_name", country.getCountry_name());
             intent.putExtra("getCountryMap", country.getCountryMap());
@@ -138,15 +138,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 countryAdapter.notifyDataSetChanged();
                 return false;
-//                if (newText.isEmpty()) {
+                //------------------------------------------------------
+//                if (TextUtils.isEmpty(newText) || newText.length() == 0 || newText.equals("")) {
 //                    listView.clearTextFilter();
 //                    isFilter = false;
-//                    return false;
 //                } else {
 //                    isFilter = true;
 //                    countryAdapter.getFilter().filter(newText);
-//                    return false;
 //                }
+//                return false;
 
 
             }
