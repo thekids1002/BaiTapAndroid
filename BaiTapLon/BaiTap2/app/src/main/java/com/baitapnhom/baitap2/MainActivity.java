@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             else{
                 country = lazy_load_countries.get(i);
             }
+         //   country = (Country) adapterView.getAdapter().getItem(i);
             Intent intent = new Intent(MainActivity.this, InfoCountryActivity.class);
             intent.putExtra("getCountry_name", country.getCountry_name());
             intent.putExtra("getCountryMap", country.getCountryMap());
@@ -91,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                     try {
-                        for (int i = totalItemCount; i < totalItemCount + 7; ++i) {
+                        for (int i = totalItemCount; i < totalItemCount + 7; ++i) { // i = 7 , i < 14,
                             if (totalItemCount == (countries.size() - 1)) {
                                 break;
                             }
-                            Country country = countries.get(i);
-                            lazy_load_countries.add(country);
+                            Country country = countries.get(i); // get(8)
+                            lazy_load_countries.add(country); //
 
                         }
                         countryAdapter.notifyDataSetChanged();

@@ -25,19 +25,19 @@ import java.util.List;
 import Model.Country;
 import Util.BitmapManager;
 
-public class CountryAdapter extends BaseAdapter implements Filterable{
+public class CountryAdapter extends BaseAdapter {
     @NonNull
     Context context;
     int resource;
     @NonNull
-            CustomFilter cs;
+    //  CustomFilter cs;
     ArrayList<Country> originalArray,temp;
 
 
     public CountryAdapter(@NonNull Context context,  ArrayList<Country> originalArray) {
         this.context = context;
         this.originalArray = originalArray;
-        this.temp =  this.originalArray;
+       // this.temp =  this.originalArray;
 
     }
 
@@ -48,7 +48,7 @@ public class CountryAdapter extends BaseAdapter implements Filterable{
 
     @Override
     public Object getItem(int i) {
-        return i;
+        return originalArray.get(i);
     }
 
     @Override
@@ -81,47 +81,47 @@ public class CountryAdapter extends BaseAdapter implements Filterable{
         return convertView;
     }
 
-    @Override
-    public Filter getFilter() {
-        if(cs == null){
-            cs = new CustomFilter();
-        }
-        return cs;
-    }
-    class CustomFilter extends Filter{
-
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            ArrayList<Country> filters = new ArrayList<>();
-            FilterResults filterResults = new FilterResults() ;
-            if(charSequence != null && charSequence.length() >0){
-                charSequence = charSequence.toString().toLowerCase();
-                filters.clear();
-                for (int i = 0 ; i < temp.size() ; i++ ){
-                    if(temp.get(i).getCountry_name().toLowerCase().contains(charSequence)){
-                        Country country = temp.get(i);
-                        Log.e("TAGGGGGGGGGGGGGG",country.getCountry_name());
-                        filters.add(country);
-                    }
-
-                }
-                filterResults.count = filters.size();
-                filterResults.values = filters;
-            }
-            else{
-                filterResults.count = temp.size();
-                filterResults.values = temp;
-            }
-
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            originalArray = (ArrayList<Country>) filterResults.values;
-            notifyDataSetChanged();
-        }
-    }
+//    @Override
+//    public Filter getFilter() {
+//        if(cs == null){
+//            cs = new CustomFilter();
+//        }
+//        return cs;
+//    }
+//    class CustomFilter extends Filter{
+//
+//        @Override
+//        protected FilterResults performFiltering(CharSequence charSequence) {
+//            ArrayList<Country> filters = new ArrayList<>();
+//            FilterResults filterResults = new FilterResults() ;
+//            if(charSequence != null && charSequence.length() >0){
+//                charSequence = charSequence.toString().toLowerCase();
+//                filters.clear();
+//                for (int i = 0 ; i < temp.size() ; i++ ){
+//                    if(temp.get(i).getCountry_name().toLowerCase().contains(charSequence)){
+//                        Country country = temp.get(i);
+//                        Log.e("TAGGGGGGGGGGGGGG",country.getCountry_name());
+//                        filters.add(country);
+//                    }
+//
+//                }
+//                filterResults.count = filters.size();
+//                filterResults.values = filters;
+//            }
+//            else{
+//                filterResults.count = temp.size();
+//                filterResults.values = temp;
+//            }
+//
+//            return filterResults;
+//        }
+//
+//        @Override
+//        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+//            originalArray = (ArrayList<Country>) filterResults.values;
+//            notifyDataSetChanged();
+//        }
+//    }
 
 //    @NonNull
 //    @Override
