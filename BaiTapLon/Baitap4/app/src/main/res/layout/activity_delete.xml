@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    <TextView
+    <ImageView
         android:id="@+id/noImageInDeleted"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text= "Danh sách ảnh trống"
         android:textSize="@dimen/_25sdp"
         android:fontFamily="sans-serif"
         android:textColor="#FF1100"
         android:textAlignment="center"
+        android:src="@drawable/empty"
         />
     <ListView
         android:id="@+id/lvfile_deleted"

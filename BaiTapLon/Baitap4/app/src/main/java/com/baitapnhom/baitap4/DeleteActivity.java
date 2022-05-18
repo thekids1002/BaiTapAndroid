@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import Model.FileModel;
 
 public class DeleteActivity extends AppCompatActivity {
     private ListView lvFile_delete;
-    private TextView textView;
+    private ImageView imageView;
     private ArrayList<FileModel> fileModel = new ArrayList<>();
     private FileModelAdapter fileModelAdapter;
     @Override
@@ -116,7 +117,7 @@ public class DeleteActivity extends AppCompatActivity {
     }
 
     private void addControl() {
-        textView = findViewById(R.id.noImageInDeleted);
+        imageView = findViewById(R.id.noImageInDeleted);
         lvFile_delete = findViewById(R.id.lvfile_deleted);
         fileModelAdapter = new FileModelAdapter(DeleteActivity.this,R.layout.listview_custom,fileModel);
         getFileInDir();
@@ -128,9 +129,9 @@ public class DeleteActivity extends AppCompatActivity {
         if (directory.exists()) {
             files = directory.listFiles();
             fileModel.clear();
-            textView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
             if (files.length > 0) {
-                textView.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
                 for (int i = 0; i < files.length; i++) {
 
                     try {

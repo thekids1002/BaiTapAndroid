@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ import Utils.ReminderBroadCast;
 
 public class MainActivity extends AppCompatActivity {
     private ListView lvFile;
-    private TextView textView;
+    private ImageView imageView;
     private ArrayList<FileModel> fileModel = new ArrayList<>();
     private FileModelAdapter fileModelAdapter;
     private File[] files;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             "/Android/data/com.example.baitap4/files/Pictures/";
     public static String deleted_path = Environment.getExternalStorageDirectory().toString() +
             "/Android/data/com.example.baitap4/files/Deleted";
-    private final long TIME_PUSH_NOTIFY = 5;
+    private final long TIME_PUSH_NOTIFY = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     // component
     private void addControl() {
-        textView = findViewById(R.id.noImage);
+        imageView = findViewById(R.id.noImage);
         lvFile = findViewById(R.id.lvfile);
         lvFile.setSmoothScrollbarEnabled(true);
         fileModelAdapter = new FileModelAdapter(MainActivity.this, R.layout.listview_custom, fileModel);
@@ -167,9 +168,9 @@ public class MainActivity extends AppCompatActivity {
         if (directory.exists()) {
             files = directory.listFiles();
             fileModel.clear();
-            textView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.VISIBLE);
             if (files.length > 0) {
-                textView.setVisibility(View.GONE);
+                imageView.setVisibility(View.GONE);
                 for (int i = 0; i < files.length; i++) {
 
                     try {
