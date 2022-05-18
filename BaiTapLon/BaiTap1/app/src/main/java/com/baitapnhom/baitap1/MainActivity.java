@@ -14,7 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    TextView box1, box2, box3, box4, box5, box6, box7, box8 ,box9;
+
+    TextView box1, box2, box3, box4, box5, box6, box7, box8, box9;
     SeekBar sb = null;
     AlertDialog.Builder builder;
 
@@ -66,33 +67,35 @@ public class MainActivity extends AppCompatActivity {
         sb.setMax(100);
         changeColorEvent();
     }
+
     int[] redArray = {255, 0, 0};
-    int[] blueArray = {0,0,255};
+    int[] blueArray = {0, 0, 255};
     int[] yellowArray = {255, 255, 0};
-    int[] greenArray = {0,100,0};
+    int[] greenArray = {0, 100, 0};
+
     private void changeColorEvent() {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 
                 // red
-                box1.setBackgroundColor(Color.rgb(redArray[0]- i , redArray[1] + i , redArray[2]+ i));
-                box8.setBackgroundColor(Color.rgb(redArray[0] - i, redArray[1] + i, redArray[2]+ i));
-                box3.setBackgroundColor(Color.rgb(redArray[0]- i, redArray[1]+ i, redArray[2]+ i));
+                box1.setBackgroundColor(Color.rgb(redArray[0] - i, redArray[1] + i, redArray[2] + i));
+                box8.setBackgroundColor(Color.rgb(redArray[0] - i, redArray[1] + i, redArray[2] + i));
+                box3.setBackgroundColor(Color.rgb(redArray[0] - i, redArray[1] + i, redArray[2] + i));
 
 
                 // yellow
-                box2.setBackgroundColor(Color.rgb(yellowArray[0]- i, yellowArray[1]- i, yellowArray[2]));
-                box9.setBackgroundColor(Color.rgb(yellowArray[0]- i, yellowArray[1]- i, yellowArray[2]));
+                box2.setBackgroundColor(Color.rgb(yellowArray[0] - i, yellowArray[1] - i, yellowArray[2]));
+                box9.setBackgroundColor(Color.rgb(yellowArray[0] - i, yellowArray[1] - i, yellowArray[2]));
 
 
                 // green
-                box4.setBackgroundColor(Color.rgb(greenArray[0]+ i, greenArray[1]+ i, greenArray[2]+ i));
-                box6.setBackgroundColor(Color.rgb(greenArray[0]+ i, greenArray[1]+ i, greenArray[2]+ i));
+                box4.setBackgroundColor(Color.rgb(greenArray[0] + i, greenArray[1] + i, greenArray[2] + i));
+                box6.setBackgroundColor(Color.rgb(greenArray[0] + i, greenArray[1] + i, greenArray[2] + i));
 
                 // blue
-                box5.setBackgroundColor(Color.rgb(blueArray[0]+ i, blueArray[1]+ i, blueArray[2] - i));
-                box7.setBackgroundColor(Color.rgb(blueArray[0]+ i, blueArray[1]+ i, blueArray[2]- i));
+                box5.setBackgroundColor(Color.rgb(blueArray[0] + i, blueArray[1] + i, blueArray[2] - i));
+                box7.setBackgroundColor(Color.rgb(blueArray[0] + i, blueArray[1] + i, blueArray[2] - i));
 
 
             }

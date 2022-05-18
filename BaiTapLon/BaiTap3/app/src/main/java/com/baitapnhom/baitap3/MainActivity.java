@@ -35,7 +35,7 @@ import Utils.MyConfig;
 import Utils.MyDatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
-    DecimalFormat sdf = new DecimalFormat("###,###,###.###");
+    DecimalFormat sdf = new DecimalFormat("#.###");
     EditText txtCurrencyFrom, txtCurrencyTo;
   //  Spinner spn_from, spn_to;
     TextView CurrencyCodeFrom, CurrencyCodeTo, txtcurrency;
@@ -178,8 +178,9 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             StringBuilder content = new StringBuilder();
             try {
-                currency1 = currencyArrayList.get(spn_from.getSelectedItemPosition());
-                currency2 = currencyArrayList.get(spn_to.getSelectedItemPosition());
+                if (currency1.getCurrencyCode().equals(currency2.getCurrencyCode())) {
+                    return "";
+                }
                 String currency_name_1 = currency1.getCurrencyCode();
                 String currency_name_2 = currency2.getCurrencyCode();
                 String URL = MyConfig.getAPIConverter(currency_name_1,currency_name_2);
@@ -200,6 +201,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             try {
+                if(s.isEmpty() || s.equals("")){
+                    return;
+                }
                 XMLDOMParser parser = new XMLDOMParser();
                 Document document = parser.getDocument(s);
                 NodeList nodeList = document.getElementsByTagName("item");
