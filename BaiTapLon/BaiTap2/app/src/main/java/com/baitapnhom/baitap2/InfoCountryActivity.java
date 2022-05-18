@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.squareup.picasso.Picasso;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -55,56 +58,57 @@ public class InfoCountryActivity extends AppCompatActivity {
         country.setPopulation(getPopulation);
         country.setAreaInSqKm(getAreaInSqKm);
         country.setCountry_name(getCountry_name);
-        getMapCountryTask getMapCountryTask = new getMapCountryTask();
-        getMapCountryTask.execute();
+        Picasso.get().load(country.getCountryMap()).into(countryMap);
+//        getMapCountryTask getMapCountryTask = new getMapCountryTask();
+//        getMapCountryTask.execute();
     }
 
-    class getMapCountryTask extends AsyncTask<Void, Void, Bitmap> {
-//        private ProgressDialog dialog;
-        private CustomProgressDialog lottie ;
-        public getMapCountryTask() {
-//            dialog = new ProgressDialog(InfoCountryActivity.this);
-            lottie  = new CustomProgressDialog(InfoCountryActivity.this);
-        }
-
-
-        @Override
-        protected Bitmap doInBackground(Void... voids) {
-            try {
-                final String MAPURL = "http://img.geonames.org/img/country/250/" + country.getCountryMap().toUpperCase() + ".png";
-                Log.e("Err", "doInBackground: " + MAPURL);
-                URL url = new URL(MAPURL);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream inputStream = connection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-                return bitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            lottie.show();
-            MapName.setVisibility(View.GONE);
-            tableLayout.setVisibility(View.GONE);
-        }
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            population.setText(sdf.format(Double.parseDouble(country.getPopulation())) + " người");
-            areaInSqKm.setText(sdf.format(Double.parseDouble(country.getAreaInSqKm())) + " Km2");
-            capital.setText(country.getCapital());
-            countryMap.setImageBitmap(bitmap);
-            MapName.setText("Bản đồ quốc gia " + country.getCountry_name());
-            if (lottie.isShowing()) {
-                lottie.dismiss();
-                tableLayout.setVisibility(View.VISIBLE);
-                MapName.setVisibility(View.VISIBLE);
-            }
-        }
-    }
+//    class getMapCountryTask extends AsyncTask<Void, Void, Bitmap> {
+////        private ProgressDialog dialog;
+//        private CustomProgressDialog lottie ;
+//        public getMapCountryTask() {
+////            dialog = new ProgressDialog(InfoCountryActivity.this);
+//            lottie  = new CustomProgressDialog(InfoCountryActivity.this);
+//        }
+//
+//
+//        @Override
+//        protected Bitmap doInBackground(Void... voids) {
+//            try {
+//                final String MAPURL = "http://img.geonames.org/img/country/250/" + country.getCountryMap().toUpperCase() + ".png";
+//                Log.e("Err", "doInBackground: " + MAPURL);
+//                URL url = new URL(MAPURL);
+//                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                connection.setDoInput(true);
+//                connection.connect();
+//                InputStream inputStream = connection.getInputStream();
+//                bitmap = BitmapFactory.decodeStream(inputStream);
+//                return bitmap;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            lottie.show();
+//            MapName.setVisibility(View.GONE);
+//            tableLayout.setVisibility(View.GONE);
+//        }
+//        @Override
+//        protected void onPostExecute(Bitmap bitmap) {
+//            population.setText(sdf.format(Double.parseDouble(country.getPopulation())) + " người");
+//            areaInSqKm.setText(sdf.format(Double.parseDouble(country.getAreaInSqKm())) + " Km2");
+//            capital.setText(country.getCapital());
+//            countryMap.setImageBitmap(bitmap);
+//            MapName.setText("Bản đồ quốc gia " + country.getCountry_name());
+//            if (lottie.isShowing()) {
+//                lottie.dismiss();
+//                tableLayout.setVisibility(View.VISIBLE);
+//                MapName.setVisibility(View.VISIBLE);
+//            }
+//        }
+//    }
 
 }

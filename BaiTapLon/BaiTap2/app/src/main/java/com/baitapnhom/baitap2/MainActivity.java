@@ -194,8 +194,9 @@ public class MainActivity extends AppCompatActivity {
                     if (jsonObject.has("countryCode")) {
                         String country_code = jsonObject.getString("countryCode").toLowerCase();
                         String link_image = "http://img.geonames.org/flags/x/" + country_code + ".gif";
+                        String link_map = "http://img.geonames.org/img/country/250/" + country_code.toUpperCase() + ".png";
                         country.setImage(link_image);
-                        country.setCountryMap(country_code);
+                        country.setCountryMap(link_map);
                     }
                     if (jsonObject.has("capital")) {
                         String capital = jsonObject.getString("capital");
