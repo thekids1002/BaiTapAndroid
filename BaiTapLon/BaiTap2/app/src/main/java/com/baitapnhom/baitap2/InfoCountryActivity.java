@@ -24,8 +24,6 @@ public class InfoCountryActivity extends AppCompatActivity {
     TextView population, areaInSqKm, capital, MapName;
     ImageView countryMap;
     private Country country;
-    Bitmap bitmap;
-    DecimalFormat sdf = new DecimalFormat("###,###.###");
     TableLayout tableLayout;
 
     @Override

@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private boolean isFilter;
     ArrayList<Country> countriesTemp = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,17 +153,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class ContryTask extends AsyncTask<Void, Void, ArrayList<Country>> {
-        // private ProgressDialog dialog;
         private CustomProgressDialog lottie;
 
         public ContryTask() {
-            //  dialog = new ProgressDialog(MainActivity.this);
             lottie = new CustomProgressDialog(MainActivity.this);
         }
 
         @Override
         protected ArrayList<Country> doInBackground(Void... voids) {
-            ArrayList<Country> ds = new ArrayList<Country>();
+            ArrayList<Country> ds = new ArrayList<>();
             try {
                 URL url = new URL("http://api.geonames.org/countryInfoJSON?username=btandroid2");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
