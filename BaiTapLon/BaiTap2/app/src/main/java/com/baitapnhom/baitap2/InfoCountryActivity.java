@@ -44,14 +44,15 @@ public class InfoCountryActivity extends AppCompatActivity {
     }
 
     public void addEvent() {
+        DecimalFormat dcf = new DecimalFormat("###,###");
         Intent intent = getIntent();
         String getCountry_name = intent.getStringExtra("getCountry_name");
         String getPopulation = intent.getStringExtra("getPopulation");
         String getAreaInSqKm = intent.getStringExtra("getAreaInSqKm");
         String getCapital = intent.getStringExtra("getCapital");
         String getCountryMap = intent.getStringExtra("getCountryMap");
-        population.setText(getPopulation + " người");
-        areaInSqKm.setText(getAreaInSqKm + " km²");
+        population.setText(dcf.format(Float.parseFloat(getPopulation)) + " người");
+        areaInSqKm.setText(dcf.format(Float.parseFloat(getAreaInSqKm)) + " km²");
         capital.setText(getCapital);
         MapName.setText(getCountry_name);
         Picasso.get().load(getCountryMap).placeholder(R.drawable.progress_animation).into(countryMap);

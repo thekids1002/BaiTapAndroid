@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
                     result = result.replaceAll(currency1.getCurrencyCode(),"");
                     result = result.replaceAll(currency2.getCurrencyCode(),"");
                 }
+
                 String[] arr = result.split("\n");
                 String currency = arr[0];
                 txtcurrency.setText(currency);
